@@ -1,16 +1,20 @@
 # ${\color{#b3903f} Operações Bancárias}$  
-<img src="https://cdn-icons-png.flaticon.com/512/1052/1052854.png" width='40'/>  Repositório desenvolvido para fins de aprendizado, com estrutura de testes e checagem estática de código utilizando Pytest e Mypy.
+<img src="https://cdn-icons-png.flaticon.com/512/1052/1052854.png" width='40'/>  Repositório desenvolvido com Python 3.12 para fins de aprendizado, contendo estrutura de testes e checagem estática de código utilizando Pytest e Mypy.
  [Operações Bancárias](https://github.com/AleDevir/operacoes_bancarias_basicas)
+ 
 
-
-<sub>Repositório criado com Python 3.12 </sub><img src="https://docs.python.org/pt-br/3/_static/py.svg" alt="imagem logo python" width="20"/> 
 
 ### Links Úteis:
-+ [Python Pages](https://www.python.org/downloads/)
-  
-+ [![linting: pylint](https://img.shields.io/badge/linting-pylint-yellowgreen)](https://github.com/pylint-dev/pylint)
-+ [Mypy Pages](https://mypy.readthedocs.io/en/stable/getting_started.html) 
-+ [Pytest Pages](https://pypi.org/project/pytest/) 
++ [![Python](https://img.shields.io/badge/Python-blue)](https://www.python.org/downloads/)
++ [![Pylint](https://img.shields.io/badge/Pylint-yellowgreen)](https://pypi.org/project/pylint/)
++ [![Mypy](https://img.shields.io/badge/Mypy-darkblue)](https://mypy.readthedocs.io/en/stable/)
++ [![Pytest](https://img.shields.io/badge/Pytest-orange)](https://pypi.org/project/pytest/)
++ [![Bcrypt](https://img.shields.io/badge/Bcrypt-ligthbluee)](https://pypi.org/project/bcrypt/)
+
+
+
+
+
 
 
 
@@ -52,7 +56,7 @@ pytest tests/ -vv --cov=.
 
 ```
 
-### Exemplo teste com relaório do pytest:
+### Exemplo do relatório utilizando o pytest:
 ```
 pytest tests/ -vv --cov=.
 ```
