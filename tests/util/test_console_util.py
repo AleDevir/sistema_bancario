@@ -2,7 +2,7 @@
 Testes do módulo console_util.py
 pytest tests/util/test_console_util.py -vv
 '''
-from util.console_util import(
+from src.util.console_util import(
     limpar_console,
     verde,
     bright_amarelo,
@@ -30,7 +30,6 @@ def test_conteudo_verde():
     '''
     text = 'texto'
     resposta = f"{COR_VERDE}{text}{COR_BRANCA}"
-    # resposta = f"{COR_VERDE}{text}{COR_BRANCA}"
     coloracao_valida = verde(text)
     assert coloracao_valida == resposta
 

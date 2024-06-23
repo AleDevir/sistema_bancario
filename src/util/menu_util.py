@@ -2,7 +2,7 @@
 Módulo Utilitário de menu.
 '''
 from typing import Final
-from util.console_util import verde, print_left
+from src.util.console_util import verde, print_left
 
 LINHA_TRACEJADA: Final[str] = '-' * 51
 

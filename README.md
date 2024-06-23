@@ -14,10 +14,6 @@
 
 
 
-
-
-
-
  ### Instalações:
 ```
 # Para verificar a qualidade de código fonte.

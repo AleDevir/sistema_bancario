@@ -1,7 +1,7 @@
 '''
 Módulo Utilitário das operações de input do console.
 '''
-from .console_util import vermelho, verde
+from src.util.console_util import vermelho, verde
 
 def get_input(msg: str) -> str:
     '''
