@@ -45,15 +45,15 @@ pylint <nome_do_arquivo.py> util
 mypy --show-error-codes --check-untyped-defs <nome_do_arquivo.py>  <nome_da_pasta>
 
 # Testes com relatório de cobertura para o sonar (coverage.xml).
-pytest tests/ -vv --cov=. --cov-report=xml
+pytest tests/ -vv --cov=src --cov-report=xml
 
 # Testes com relatório de cobertura exibido no console.
-pytest tests/ -vv --cov=.
+pytest tests/ -vv --cov=src
 
 ```
 
 ### Exemplo do relatório utilizando o pytest:
 ```
-pytest tests/ -vv --cov=.
+pytest tests/ -vv --cov=src
 ```
 ![Relatório dos testes>](https://github.com/AleDevir/operacoes_bancarias_basicas/blob/main/img/resultado_do_relatorio_cobertura_de_teste.png)

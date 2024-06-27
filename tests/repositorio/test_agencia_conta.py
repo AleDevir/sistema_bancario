@@ -1,15 +1,15 @@
 # pylint: disable=line-too-long
 '''
-Testes do model agencia_conta.py
-pytest tests/model/test_agencia_conta.py -vv
+Testes do repositorio agencia_conta.py
+pytest tests/repositorio/test_agencia_conta.py -vv
 '''
 
-from src.model.agencia_conta import get_contas_agencias_do_usuario
+from src.repositorio.agencia_conta_repositorio import get_contas_agencias_do_usuario
 
 def test_get_contas_agencias_do_usuario():
     '''
     Teste do metodo otest_get_contas_agencias_do_usuario 
-    pytest tests/model/test_agencia_conta.py::test_get_contas_agencias_do_usuario -vv
+    pytest tests/repositorio/test_agencia_conta.py::test_get_contas_agencias_do_usuario -vv
     '''
     usuario = {
         'id': 4
@@ -22,7 +22,7 @@ def test_get_contas_agencias_do_usuario():
 def test_get_contas_agencias_do_usuario_invalido():
     '''
     Teste do metodo otest_get_contas_agencias_do_usuario - ID INVÁLIDO
-    pytest tests/model/test_agencia_conta.py::test_get_contas_agencias_do_usuario_invalido -vv
+    pytest tests/repositorio/test_agencia_conta.py::test_get_contas_agencias_do_usuario_invalido -vv
     '''
     usuario = {
         'id': 4333

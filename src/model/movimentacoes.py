@@ -1,88 +1,40 @@
 '''
-Model das movimentações finaceiras
+model Transacoes()
 '''
-
 from datetime import datetime
+from src.model.base_model import BaseModel
 
-movimentacoes_finaceiras: list[dict[str, str | datetime | float]] = [
+class Movimentacoes(BaseModel):
+    '''
+    Dados da movimentação bancária de uma determinada conta do correntista.
+    '''
+    # pylint: disable=too-few-public-methods
+    def __init__(
+        # pylint: disable=too-many-arguments
+        self,
+        idt: int,
+        valor: float,
+        date: datetime,
+        usuario_id: int,
+        conta_id: int
+    ) -> None:
+        '''
+        Inicialização da classe Transacoes
+        '''
+        super().__init__(idt)
+        self.valor: float = valor
+        self.date: datetime = date
+        self.usuario_id:  int = usuario_id
+        self.conta_id: int = conta_id
 
-    {
-        'valor': 215.2,
-        'data': datetime(2019, 2, 12, 12, 14, 00),
-        'usuario_id': 1,
-        'conta_id': 1,
-
-    },
-    {
-        'valor': 25.0,
-        'data': datetime(2020, 5, 10, 23, 10, 00),
-        'usuario_id': 1,
-        'conta_id': 2,   
-    },
-    {
-        'valor': 100.0,
-        'data': datetime(2020, 4, 17, 15, 10, 00),
-        'usuario_id': 2,   
-        'conta_id': 3,
-    },
-    {
-        'valor': -10.0,
-        'data': datetime.now(),
-        'usuario_id': 2,
-        'conta_id': 3,
-    },
-    {
-        'valor': -15.00,
-        'data': datetime.now(),
-        'usuario_id': 2,
-        'conta_id': 3,  
-    },
-    {
-        'valor': -10.50,
-        'data': datetime(2021, 6, 11, 18, 10, 00),
-        'usuario_id': 1,
-        'conta_id': 1,
-    },
-    {
-        'valor': -30.55,
-        'data': datetime.now(),
-        'usuario_id': 3,
-        'conta_id': 4,
-    },
-    {
-        'valor': -15.50,
-        'data': datetime.now(),
-        'usuario_id': 3,
-        'conta_id': 4,
-    },
-    {
-        'valor': -35.00,
-        'data': datetime.now(),
-        'usuario_id': 3,
-        'conta_id': 4,
-    },
-    {
-        'valor': -53.00,
-        'data': datetime(2021, 6, 10, 15, 10, 00),
-        'usuario_id': 3,
-        'conta_id': 4,
-    },
-    {
-        'valor': 330.90,
-        'data': datetime(2021, 6, 12, 12, 10, 00),
-        'usuario_id': 3,
-        'conta_id': 4,
-    },
-    {
-        'valor': 500,
-        'data': datetime(2021, 6, 9, 23, 10, 00),
-        'usuario_id': 4,
-        'onta_id': 6,
-    },
-    {
-        'valor': 500,
-        'data': datetime(2021, 8, 11, 18, 10, 00),
-        'usuario_id': 5,
-        'conta_id': 7,
-    },
-]
+def movimentacao_from_dict(data: dict[str, str | datetime | float]) -> Movimentacoes:
+    '''
+    Recebe os dados e retorna Conta(id, numero, tipo, agencia_id, usuario_id e digito)
+    '''
+    return Movimentacoes(
+        idt=data.get('id', 0),  # type: ignore[arg-type]
+        valor=data.get('valor', 0),  # type: ignore[arg-type]
+        date=data.get('date', datetime(1900, 1, 1, 00, 00, 00)),  # type: ignore[arg-type]
+        conta_id=data.get('conta_id', 0),  # type: ignore[arg-type]
+        usuario_id=data.get('usuario_id', 0),  # type: ignore[arg-type]
+    )

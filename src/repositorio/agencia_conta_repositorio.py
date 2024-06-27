@@ -2,10 +2,10 @@
 Model Agência + Conta
 '''
 
-from src.model.agencia import get_agencia_by_id
-from src.model.conta import get_contas_do_usuario
-from src.model.usuario import get_usuario_by_id
-from src.model.dto import new_dto
+from src.repositorio.agencia_repositorio import get_agencia_by_id
+from src.repositorio.conta_repositorio import get_contas_do_usuario
+from src.repositorio.usuario_repositorio import get_usuario_by_id
+from src.repositorio.dto import new_dto
 
 def get_contas_agencias_do_usuario(usuario_id: int) -> list[dict[str, str | int]]:
     '''
@@ -15,13 +15,13 @@ def get_contas_agencias_do_usuario(usuario_id: int) -> list[dict[str, str | int]
     contas = get_contas_do_usuario(usuario_id)
     for conta in contas:
         # Esse tipo de consulta não deve ser feito em acesso à Base de Dados
-        agencia = get_agencia_by_id(conta.get('agencia_id', 0))
+        agencia = get_agencia_by_id(conta.agencia_id)
         if not agencia:
-            raise ValueError(f"Não foi possível obter a agência da Conta de número {conta['numero']} (ID={conta['id']})!") # pylint: disable=line-too-long
+            raise ValueError(f"Não foi possível obter a agência da Conta de número {conta.numero} (ID={conta.id})!") # pylint: disable=line-too-long
 
-        usuario = get_usuario_by_id(conta.get('usuario_id', 0))
+        usuario = get_usuario_by_id(conta.usuario_id)
         if not usuario:
-            raise ValueError(f"Não foi possível obter o usuário da Conta de número {conta['numero']} (ID={conta['id']})!") # pylint: disable=line-too-long
+            raise ValueError(f"Não foi possível obter o usuário da Conta de número {conta.numero} (ID={conta.id})!") # pylint: disable=line-too-long
 
         result.append(new_dto(conta, agencia, usuario))
         # result.append({
