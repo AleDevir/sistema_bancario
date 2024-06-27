@@ -1,42 +1,34 @@
 '''
-Model Agência
-
-'id'    = PK - Primary Key: Chave Primária
-'numero'= AK - Alternate Key: Chave Alternativa
+model Agencia()
 '''
 
-agencias: list[dict[str, int]] = [
-    {
-        'id': 1,
-        'numero': 111,
-        'digito': 1,
-    },
-    {
-        'id': 2,
-        'numero': 222,
-        'digito': 2,
-    },
-    {
-        'id': 3,
-        'numero': 333,
-        'digito': 3,
-    },
-]
+from src.model.base_model import BaseModel
 
-def get_agencia_by_id(agencia_id: int) -> dict[str, int]:
+class Agencia(BaseModel):
     '''
-    Obter uma agência pelo ID.
+    Dados da agencia
     '''
-    return next((a for a in agencias if a['id'] == agencia_id), {})
+    # pylint: disable=too-few-public-methods
+    def __init__(
+        self,
+        idt: int,
+        numero: int,
+        digito: int
+    ) -> None:
+        '''
+        Inicialização da classe Agencia
+        '''
+        super().__init__(idt)
+        self.numero: int = numero
+        self.digito: int = digito
 
-def get_agencia_by_numero(agencia_numero: int) -> dict[str, int]:
-    '''
-    Obter uma agência pelo NÚMERO.
-    '''
-    return next((a for a in agencias if a['numero'] == agencia_numero), {})
 
-def get_agencias() -> list[dict[str, int]]:
+def agencia_from_dict(data: dict[str, int]) -> Agencia:
     '''
-    Obter TODAS as agências.
+    Recebe os dados e retorna Agencia(id, numero e digito)
     '''
-    return agencias.copy()
+    return Agencia(
+        idt=data.get('id', 0),
+        numero=data.get('numero', 0),
+        digito=data.get('digito', 0),
+    )

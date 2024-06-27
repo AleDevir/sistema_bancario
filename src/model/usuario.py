@@ -1,75 +1,43 @@
 '''
-Model Usuário
-
-'id'    = PK - Primary Key: Chave Primária
-'nome'  = AK - Alternate Key: Chave Alternativa
+model Usuario() 
 '''
-import bcrypt
 
-usuarios: list[dict[str, str | int | bytes ]] = [
-    {
-        'nome': 'rinaldo benevies',
-        'id': 1,
-        'senha': bcrypt.hashpw(b'123', bcrypt.gensalt()),
-        'endereco': 'Rua: Carvalho, n. 34 Rio de Janeiro/RJ',    
-        'CPF': 45559920088
-    },
-    {
-        'nome': 'alessandra guimarães',
-        'id': 2,
-        'senha': bcrypt.hashpw(b'123', bcrypt.gensalt()),
-        'endereco': 'Rua: Raiz Forte, n. 71 Guapimirim/RJ',    
-        'CPF': 95282507005 
-    },
-    {
-        'nome': 'test',
-        'id': 3,
-        'senha': bcrypt.hashpw(b'123', bcrypt.gensalt()), 
-        'endereco': 'Rua: Teste, n. 1 teste/TE',    
-        'CPF': 87315683003 
-    },
-    {
-        'nome': 'test',
-        'id': 4,
-        'senha': bcrypt.hashpw(b'123', bcrypt.gensalt()), 
-        'endereco': 'Rua: Teste, n. 1 teste/TE', 
-        'CPF': 23447087072
-    },
-    {
-        'nome': 'test',
-        'id': 5,
-        'senha': bcrypt.hashpw(b'123', bcrypt.gensalt()),
-        'endereco': 'Rua: Teste, n. 1 teste/TE', 
-        'CPF': 82160212083 
-    },
-]
+from src.model.base_model import BaseModel
 
-def get_usuario_by_id(usuario_id: int) -> dict[str, int | str]:
+class Usuario(BaseModel):
     '''
-    Obter um Usuário pelo ID.
+    Dados do usuário
     '''
-    return next((u for u in usuarios if u['id'] == usuario_id), {}) # type: ignore[misc]
+    # pylint: disable=too-few-public-methods
+    def __init__(
+        # pylint: disable=too-many-arguments
+        self,
+        nome: str,
+        sobrenome: str,
+        idt: int,
+        senha: str,
+        endereco: str,
+        cpf: int
+    ) -> None:
+        '''
+        Inicialização da classe Usuário
+        '''
+        super().__init__(idt)
+        self.nome: str = nome
+        self.sobrenome: str = sobrenome
+        self.senha: str = senha
+        self.endereco: str = endereco
+        self.cpf: int = cpf
 
-def get_usuario_by_nome(usuario_nome: str) -> dict[str, int | str]:
+def usuario_from_dict(data: dict[str, str | int | bytes ]) -> Usuario:
     '''
-    Obter um Usuário pelo NOME.
+    Recebe os dados e retorna o Usuario(id, nome, sobrenome, cpf, endereco, senha)
     '''
-    return next((u for u in usuarios if u['nome'] == usuario_nome), {}) # type: ignore[misc]
-
-def get_usuarios() -> list[dict[str, str | int | bytes ]]:
-    '''
-    Obter TODOS os Usuários.
-    '''
-    return usuarios.copy()
-
-
-def senha_valida(usuario_id: int, senha: str) -> bool:
-    '''
-    Valida a senha do usuário.
-    '''
-    usuario = get_usuario_by_id(usuario_id)
-
-    if not usuario:
-        return False
-
-    return bcrypt.checkpw(senha.encode(), usuario['senha']) # type: ignore[arg-type]
+    return Usuario(
+        nome=data.get('nome', ''), # type: ignore[arg-type]
+        sobrenome=data.get('sobrenome', ''), # type: ignore[arg-type]
+        idt=data.get('id', 0), # type: ignore[arg-type]
+        senha=data.get('senha', '123'), # type: ignore[arg-type]
+        endereco=data.get('endereco', 'x'), # type: ignore[arg-type]
+        cpf=data.get('cpf', 0) # type: ignore[arg-type]
+    )
