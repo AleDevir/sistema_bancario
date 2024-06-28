@@ -25,6 +25,7 @@ from src.repositorio.movimentacoes_repositorio import (
 from src.negocio.saldo import  calcular_saldo_do_usuario
 from src.negocio.transacao import pode_sacar_hoje, validar_saque
 from src.util.input_util import input_float
+from src.util.execptions import AuthException
 
 
 
@@ -60,10 +61,13 @@ def get_auth_na_conta() -> dict[str, str | int]:
     while not auth:
         conta_numero = input_int("\n Conta Corrente: ")
         senha_informada = get_senha(" Senha: " )
-        auth = get_auth(conta_numero, senha_informada)
-        print(f"auth: {auth} ")
-        if not auth:
+        try:
+            auth = get_auth(conta_numero, senha_informada)
+            # if not auth:
+            #     print(vermelho('\n Credênciais inválidas! Por favor tente novamente.')) # pylint: disable=line-too-long
+        except AuthException as exc:
             print(vermelho('\n Credênciais inválidas! Por favor tente novamente.')) # pylint: disable=line-too-long
+
     return auth
 
 def exibir_mensagem_de_boas_vindas(

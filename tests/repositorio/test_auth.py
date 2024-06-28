@@ -7,6 +7,7 @@ import pytest
 from src.repositorio.auth_repositorio import(
     get_auth
 )
+from src.util.execptions import AuthException
 
 def test_auth():
     '''
@@ -28,7 +29,7 @@ def test_auth_error():
     senha = '123'
     conta_numero = 8577777
     erro = f"Não foi possível obter a conta de número {conta_numero}!"
-    with pytest.raises(ValueError, match=erro):
+    with pytest.raises(AuthException, match=erro):
         get_auth(conta_numero, senha)
 
 
@@ -42,7 +43,7 @@ def test_auth_error_manual():
     try:
         get_auth(conta_numero, senha)
         assert False
-    except ValueError as error:
+    except AuthException as error:
         assert True
         assert str(error) ==f"Não foi possível obter a conta de número {conta_numero}!"
 
