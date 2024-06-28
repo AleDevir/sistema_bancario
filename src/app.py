@@ -60,7 +60,6 @@ def get_auth_na_conta() -> dict[str, str | int]:
     while not auth:
         conta_numero = input_int("\n Conta Corrente: ")
         senha_informada = get_senha(" Senha: " )
-        print(f"conta: {conta_numero} e senha: {senha_informada}")
         auth = get_auth(conta_numero, senha_informada)
         print(f"auth: {auth} ")
         if not auth:
