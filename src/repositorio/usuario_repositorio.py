@@ -85,4 +85,4 @@ def senha_valida(usuario_id: int, senha: str) -> bool:
     if not usuario:
         return False
 
-    return bcrypt.checkpw(senha.encode(), usuario.senha.encode())
+    return bcrypt.checkpw(senha.encode(), usuario.senha) # type: ignore[arg-type]
