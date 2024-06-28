@@ -17,7 +17,7 @@ from src.util.console_util import (
 )
 from src.util.menu_util import exibir_menu
 from src.util.input_util import input_opcoes, input_int
-from src.repositorio.auth_repositorio import get_auth
+from src.auth.authentication import get_auth
 from src.repositorio.movimentacoes_repositorio import (
     add_movimentacao,
     get_movimentacao_financeira_do_usuario,
@@ -63,10 +63,8 @@ def get_auth_na_conta() -> dict[str, str | int]:
         senha_informada = get_senha(" Senha: " )
         try:
             auth = get_auth(conta_numero, senha_informada)
-            # if not auth:
-            #     print(vermelho('\n Credênciais inválidas! Por favor tente novamente.')) # pylint: disable=line-too-long
-        except AuthException as exc:
-            print(vermelho('\n Credênciais inválidas! Por favor tente novamente.')) # pylint: disable=line-too-long
+        except AuthException:
+            print(vermelho('\nCredênciais inválidas! Por favor tente novamente.')) # pylint: disable=line-too-long
 
     return auth
 
@@ -137,7 +135,25 @@ def escolher_uma_opcao_do_menu_entrada() -> str:
 ##################################################
      # OPERAÇÕES FINANCEIRAS #
 ##################################################
+def timestamp(funcao):
+    '''
+    Função decoradora para exibir a data e a hora.
+    '''
+    def envelope(*args, **kwargs) -> None:
+        '''
+        Função envelope
+        '''
+        funcao(*args, **kwargs)
+        # Pegar usuario_id tanto argumento posicional como argumento nomeado.
+        usuario_id: int = kwargs.get('usuario_id', 0) if 'usuario_id' in kwargs else args[0]
+        print(f"usuario_id={usuario_id}")
+        saldo = calcular_saldo_do_usuario(usuario_id)
+        print(f"Saldo R$ {saldo}")
+        print(datetime.now())
 
+    return envelope
+
+@timestamp
 def sacar(usuario_id: int) -> None:
     '''
     Obtem o valor de saque inserido pelo usuário.
@@ -155,10 +171,9 @@ def sacar(usuario_id: int) -> None:
             print(f"\n{vermelho(saque_invalido)}\n")
         else:
             add_movimentacao(-saque, usuario_id)
-            saldo = calcular_saldo_do_usuario(usuario_id)
-            print(f"Saldo R$ {saldo}")
             break
 
+@timestamp
 def depositar(usuario_id: int) -> None:
     '''
     Deposita valores positivos na conta.
@@ -170,8 +185,6 @@ def depositar(usuario_id: int) -> None:
         else:
             if deposito:
                 add_movimentacao(deposito, usuario_id)
-            saldo = calcular_saldo_do_usuario(usuario_id)
-            print(f"Saldo R$ {saldo}")
             break
 
 ##################################################

@@ -27,5 +27,5 @@ def get_auth(conta_numero: int, senha: str) -> dict[str, int | str]:
         raise AuthException(f"Não foi possível obter o usuário da Conta de número {conta.numero} (ID={conta.id})!") # pylint: disable=line-too-long
 
     if not senha_valida(int(usuario.id), senha):
-        return {}
+        raise AuthException('\nCredênciais inválidas!')
     return new_dto(conta, agencia, usuario)

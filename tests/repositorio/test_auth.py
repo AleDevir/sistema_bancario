@@ -4,7 +4,7 @@ Testes do repositorio login.py
 pytest tests/repositorio/test_auth.py -vv
 '''
 import pytest
-from src.repositorio.auth_repositorio import(
+from src.auth.authentication import(
     get_auth
 )
 from src.util.execptions import AuthException
