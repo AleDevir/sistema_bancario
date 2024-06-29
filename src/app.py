@@ -26,6 +26,7 @@ from src.negocio.saldo import  calcular_saldo_do_usuario
 from src.negocio.transacao import pode_sacar_hoje, validar_saque
 from src.util.input_util import input_float
 from src.util.execptions import AuthException
+from src.util.data_e_hora_util import exibir_data_e_hora, formatar_data_e_hora
 
 
 
@@ -47,6 +48,23 @@ def get_senha(msg: str) -> str:
     Confeccionada para poder mokar os testes.
     '''
     return getpass.getpass(msg)
+def timestamp(funcao):
+    '''
+    Função decoradora para exibir a data e a hora.
+    '''
+    def envelope(*args, **kwargs) -> None:
+        '''
+        Função envelope
+        '''
+        funcao(*args, **kwargs)
+
+        # Pegar usuario_id tanto argumento posicional como argumento nomeado.
+        usuario_id: int = kwargs.get('usuario_id', 0) if 'usuario_id' in kwargs else args[0]
+        saldo = calcular_saldo_do_usuario(usuario_id)
+        print(f"Saldo R$ {saldo}")
+        exibir_data_e_hora()
+
+    return envelope
 
 ##################################################
         # CREDENCIAS - ENTRADA NO SISTEMA #
@@ -87,6 +105,7 @@ def exibir_mensagem_de_boas_vindas(
                   # EXTRATO  #
 ##################################################
 
+@timestamp
 def exibir_extrato(usuario_id: int) -> None:
     '''
     Exibe toda a movimentação financeira(depósitos, saques e saldo atual) do usúario logado. 
@@ -97,12 +116,11 @@ def exibir_extrato(usuario_id: int) -> None:
         valor:float = operacao.valor
         data: datetime = operacao.date
         if valor < 0:
-            print_left(f"Saque {vermelho(f'R${valor}')} Em: {data}\n")
+            print_left(f"Saque {vermelho(f'R${valor}')} Em: {formatar_data_e_hora(data)}\n")
         elif valor > 0:
-            print_left(f"Depósito {verde(f'R${valor}')} Em: {data}\n")
+            print_left(f"Depósito {verde(f'R${valor}')} Em: {formatar_data_e_hora(data)}\n")
     print(f"{LINHA_TRACEJADA}")
-    print_left(f"Saldo R$ {calcular_saldo_do_usuario(usuario_id)}")
-    print(f"{LINHA_TRACEJADA} \n")
+
 
 ##################################################
      # OPÇOES DO MENU #
@@ -135,23 +153,6 @@ def escolher_uma_opcao_do_menu_entrada() -> str:
 ##################################################
      # OPERAÇÕES FINANCEIRAS #
 ##################################################
-def timestamp(funcao):
-    '''
-    Função decoradora para exibir a data e a hora.
-    '''
-    def envelope(*args, **kwargs) -> None:
-        '''
-        Função envelope
-        '''
-        funcao(*args, **kwargs)
-        # Pegar usuario_id tanto argumento posicional como argumento nomeado.
-        usuario_id: int = kwargs.get('usuario_id', 0) if 'usuario_id' in kwargs else args[0]
-        print(f"usuario_id={usuario_id}")
-        saldo = calcular_saldo_do_usuario(usuario_id)
-        print(f"Saldo R$ {saldo}")
-        print(datetime.now())
-
-    return envelope
 
 @timestamp
 def sacar(usuario_id: int) -> None:
