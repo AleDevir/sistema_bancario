@@ -4,12 +4,12 @@ DTO - DATA TRANSFER OBJECT
 
 from src.model.agencia import Agencia
 from src.model.conta import Conta
-from src.model.usuario import Usuario
+from src.model.cliente import Cliente
 
 def new_dto(
     conta: Conta,
     agencia: Agencia,
-    usuario: Usuario
+    cliente: Cliente
 ) -> dict[str, str | int]:
     '''
     DTO = Data Transfer Object
@@ -23,7 +23,7 @@ def new_dto(
         'agencia_id': agencia.id,
         'agencia_numero': agencia.numero,
         'agencia_digito': agencia.digito,
-        # Usuário
-        'usuario_id': usuario.id,
-        'usuario_nome': usuario.nome,
+        # Cliente
+        'cliente_id': cliente.id,
+        'cliente_nome': cliente.nome,
     }

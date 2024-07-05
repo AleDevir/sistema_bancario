@@ -1,12 +1,12 @@
 '''
-model Usuario() 
+model Cliente() 
 '''
 
 from src.model.base_model import BaseModel
 
-class Usuario(BaseModel):
+class Cliente(BaseModel):
     '''
-    Dados do usuário
+    Dados do cliente
     '''
     # pylint: disable=too-few-public-methods
     def __init__(
@@ -16,28 +16,25 @@ class Usuario(BaseModel):
         sobrenome: str,
         idt: int,
         senha: str,
-        endereco: str,
         cpf: int
     ) -> None:
         '''
-        Inicialização da classe Usuário
+        Inicialização da classe Cliente
         '''
         super().__init__(idt)
         self.nome: str = nome
         self.sobrenome: str = sobrenome
         self.senha: str = senha
-        self.endereco: str = endereco
         self.cpf: int = cpf
 
-def usuario_from_dict(data: dict[str, str | int | bytes ]) -> Usuario:
+def cliente_from_dict(data: dict[str, str | int | bytes ]) -> Cliente:
     '''
-    Recebe os dados e retorna o Usuario(id, nome, sobrenome, cpf, endereco, senha)
+    Recebe os dados e retorna o Cliente(id, nome, sobrenome, cpf, senha)
     '''
-    return Usuario(
+    return Cliente(
         nome=data.get('nome', ''), # type: ignore[arg-type]
         sobrenome=data.get('sobrenome', ''), # type: ignore[arg-type]
         idt=data.get('id', 0), # type: ignore[arg-type]
         senha=data.get('senha', '123'), # type: ignore[arg-type]
-        endereco=data.get('endereco', 'x'), # type: ignore[arg-type]
         cpf=data.get('cpf', 0) # type: ignore[arg-type]
     )

@@ -20,9 +20,9 @@ from src.util.input_util import input_opcoes, input_int
 from src.auth.authentication import get_auth
 from src.repositorio.movimentacoes_repositorio import (
     add_movimentacao,
-    get_movimentacao_financeira_do_usuario,
+    get_movimentacao_financeira_do_cliente,
 )
-from src.negocio.saldo import  calcular_saldo_do_usuario
+from src.negocio.saldo import  calcular_saldo_do_cliente
 from src.negocio.transacao import pode_sacar_hoje, validar_saque
 from src.util.input_util import input_float
 from src.util.execptions import AuthException
@@ -48,6 +48,7 @@ def get_senha(msg: str) -> str:
     Confeccionada para poder mokar os testes.
     '''
     return getpass.getpass(msg)
+
 def timestamp(funcao):
     '''
     Função decoradora para exibir a data e a hora.
@@ -58,9 +59,9 @@ def timestamp(funcao):
         '''
         funcao(*args, **kwargs)
 
-        # Pegar usuario_id tanto argumento posicional como argumento nomeado.
-        usuario_id: int = kwargs.get('usuario_id', 0) if 'usuario_id' in kwargs else args[0]
-        saldo = calcular_saldo_do_usuario(usuario_id)
+        # Pegar cliente_id tanto argumento posicional como argumento nomeado.
+        cliente_id: int = kwargs.get('cliente_id', 0) if 'cliente_id' in kwargs else args[0]
+        saldo = calcular_saldo_do_cliente(cliente_id)
         print(f"Saldo R$ {saldo}")
         exibir_data_e_hora()
 
@@ -72,8 +73,8 @@ def timestamp(funcao):
 
 def get_auth_na_conta() -> dict[str, str | int]:
     '''
-    Obtem um usuário cadastrado.
-    Retorna o usuário.
+    Obtem um cliente cadastrado.
+    Retorna o cliente.
     '''
     auth: dict[str, str | int ] = {}
     while not auth:
@@ -87,7 +88,7 @@ def get_auth_na_conta() -> dict[str, str | int]:
     return auth
 
 def exibir_mensagem_de_boas_vindas(
-    nome_do_usuario: str,
+    nome_do_cliente: str,
     hora_atual: datetime = datetime.now()
 ) -> None:
     '''
@@ -95,22 +96,22 @@ def exibir_mensagem_de_boas_vindas(
     '''
     print_center(bright_amarelo("Banco Feliz :)"), 40)
     if hora_atual.hour < 12:
-        print_left(bright_amarelo(f"\n Bom dia, {nome_do_usuario.title()}! \n"))
+        print_left(bright_amarelo(f"\n Bom dia, {nome_do_cliente.title()}! \n"))
     elif 12 <= hora_atual.hour < 18:
-        print_left(bright_amarelo(f"\n Boa tarde, {nome_do_usuario.title()}! \n"))
+        print_left(bright_amarelo(f"\n Boa tarde, {nome_do_cliente.title()}! \n"))
     else:
-        print_left(bright_amarelo(f"\n Bom noite, {nome_do_usuario.title()}! \n"))
+        print_left(bright_amarelo(f"\n Bom noite, {nome_do_cliente.title()}! \n"))
 
 ##################################################
                   # EXTRATO  #
 ##################################################
 
 @timestamp
-def exibir_extrato(usuario_id: int) -> None:
+def exibir_extrato(cliente_id: int) -> None:
     '''
     Exibe toda a movimentação financeira(depósitos, saques e saldo atual) do usúario logado. 
     '''
-    extrato = get_movimentacao_financeira_do_usuario(usuario_id)
+    extrato = get_movimentacao_financeira_do_cliente(cliente_id)
     print(f"\n{LINHA_TRACEJADA}")
     for operacao in extrato:
         valor:float = operacao.valor
@@ -155,27 +156,27 @@ def escolher_uma_opcao_do_menu_entrada() -> str:
 ##################################################
 
 @timestamp
-def sacar(usuario_id: int) -> None:
+def sacar(cliente_id: int) -> None:
     '''
-    Obtem o valor de saque inserido pelo usuário.
+    Obtem o valor de saque inserido pelo cliente.
     Inseri o resultado na estrutura de dados.
     '''
-    if not pode_sacar_hoje(usuario_id):
+    if not pode_sacar_hoje(cliente_id):
         print(vermelho('\n Você já atingiu o limite de saques por dia!\n')) # pylint: disable=line-too-long
         return
 
-    saldo = calcular_saldo_do_usuario(usuario_id)
+    saldo = calcular_saldo_do_cliente(cliente_id)
     while True:
         saque = input_float("Entre com o valor do saque R$: ")
         saque_invalido = validar_saque(saque, saldo)
         if saque_invalido:
             print(f"\n{vermelho(saque_invalido)}\n")
         else:
-            add_movimentacao(-saque, usuario_id)
+            add_movimentacao(-saque, cliente_id)
             break
 
 @timestamp
-def depositar(usuario_id: int) -> None:
+def depositar(cliente_id: int) -> None:
     '''
     Deposita valores positivos na conta.
     '''
@@ -185,7 +186,7 @@ def depositar(usuario_id: int) -> None:
             print(vermelho(f'\nValor {deposito} inválido! Por favor tente novamente.\n')) # pylint: disable=line-too-long
         else:
             if deposito:
-                add_movimentacao(deposito, usuario_id)
+                add_movimentacao(deposito, cliente_id)
             break
 
 ##################################################
@@ -199,16 +200,16 @@ def caixa_eletronico() -> None:
     limpar_console()
     auth = get_auth_na_conta()
     limpar_console()
-    exibir_mensagem_de_boas_vindas(str(auth['usuario_nome']))
+    exibir_mensagem_de_boas_vindas(str(auth['cliente_nome']))
     while True:
         opcao = escolher_uma_opcao_do_menu_entrada()
         if opcao == "E":
-            exibir_extrato(int(auth['usuario_id']))
+            exibir_extrato(int(auth['conta_id']))
         if opcao == "D":
-            depositar(int(auth['usuario_id']))
+            depositar(int(auth['conta_id']))
         if opcao == "S":
-            sacar(int(auth['usuario_id']))
+            sacar(int(auth['conta_id']))
         if opcao == "F":
             print_center(bright_amarelo(" Banco Feliz :)\n"), 40)
-            print_center(bright_amarelo(f"Até breve {str(auth['usuario_nome']).title()}."), 30)
+            print_center(bright_amarelo(f"Até breve {str(auth['cliente_nome']).title()}."), 30)
             break

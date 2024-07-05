@@ -3,108 +3,103 @@ Model Conta
 'id'    = PK - Primary Key: Chave Primária
 'numero'= AK - Alternate Key: Chave Alternativa
 '''
+
+from sqlite3 import connect, Cursor
 from typing import Optional
 from src.model.conta import Conta, conta_from_dict
 
-CONTAS: list[dict[str, int]] = [
-    {
-        'id': 1,
-        'numero': 111111, 
-        'digito': 11,
-        'tipo': 1, # Conta Corrente
-        'agencia_id': 1, 
-        'usuario_id': 1, 
-    },
-    {
-        'id': 2,
-        'numero': 222222, 
-        'digito': 22,
-        'tipo': 2, # Conta Poupança
-        'agencia_id': 1, 
-        'usuario_id': 1, 
-    },
-    {
-        'id': 3,
-        'numero': 333333, 
-        'digito': 33,
-        'tipo': 1, # Conta Corrente
-        'agencia_id': 2,
-        'usuario_id': 2,
-    },
-    {
-        'id': 4,
-        'numero': 444444, 
-        'digito': 44,
-        'tipo': 1, # Conta Corrente
-        'agencia_id': 1,
-        'usuario_id': 3,
-    },
-    {
-        'id': 5,
-        'numero': 555555, 
-        'digito': 55,
-        'tipo': 2, # Conta Corrente
-        'agencia_id': 2,
-        'usuario_id': 4,
-    },
-    {
-        'id': 6,
-        'numero': 666666, 
-        'digito': 66,
-        'tipo': 2, # Conta Corrente
-        'agencia_id': 3,
-        'usuario_id': 5,
-    },
-    {
-        'id': 7,
-        'numero': 777777, 
-        'digito': 77,
-        'tipo': 2, # Conta Poupança
-        'agencia_id': 1, 
-        'usuario_id': 2, 
-    },
-]
+conexao_conta = connect('C:\\Estudos_python\\operacoes_bancarias_basicas\\src\\db\\banco_de_dados.db')
+cursor: Cursor = conexao_conta.cursor()
+
+def criar_tabela_contas():
+    '''
+    Cria a tabela contas
+    '''
+    cursor.execute(''' CREATE TABLE IF NOT EXISTS contas(
+                    id integer primary key autoincrement,
+                    numero integer NOT NULL,
+                    digito integer NOT NULL,
+                    tipo integer NOT NULL,
+                    agencia_id integer  NOT NULL,
+                    cliente_id integer NOT NULL,
+                    FOREIGN KEY(cliente_id) REFERENCES clientes(id))''')
+
+
+
+def inserir_conta(numero: int, digito: int, tipo: int, agencia_id: int, cliente_id: int, ):
+    '''
+    Inseri conta na tabela.
+    '''
+    dados =  (numero, digito, tipo, agencia_id, cliente_id)
+    cursor.execute('INSERT INTO contas(numero, digito, tipo, agencia_id, cliente_id) VALUES(?, ?,  ?, ?, ?)', dados) # pylint: disable=line-too-long
+    conexao_conta.commit()
+
+#################################################
+    # INFRAESTRUTURA #
+#################################################
+
+def conta_tuple_to_dict(data: tuple) -> dict[str, int]:
+    '''
+    Transforma um elemento (tuple) do banco de dados em uma estrutura de dicionário.
+    Retorna o dicionário com dados da conta.
+    '''
+    idt, numero, digito, tipo, agencia_id, cliente_id =  data
+    return {
+        'id': idt,
+        'numero': numero,
+        'digito': digito,
+        'tipo': tipo,
+        'agencia_id': agencia_id,
+        'cliente_id': cliente_id,
+    }
+
+#################################################
+    # GET - CONTA #
+#################################################
 
 def get_conta_by_id(conta_id: int) -> Optional[Conta]:
     '''
     Obter uma Conta pelo ID.
     '''
-    data: dict[str, int] = next((c for c in CONTAS if c['id'] == conta_id), {})
-    return conta_from_dict(data)
+    cursor.execute(f"SELECT * FROM contas WHERE id = {conta_id} ")
+    data = cursor.fetchone()
+    data_dict = conta_tuple_to_dict(data)
+    return conta_from_dict(data_dict)
 
 def get_conta_by_numero(conta_numero: int) -> Optional[Conta]:
     '''
     Obter uma Conta pelo NÚMERO.
     '''
-    data: dict[str, int] = next((c for c in CONTAS if c['numero'] == conta_numero), {})
-    return conta_from_dict(data)
+    cursor.execute(f"SELECT * FROM contas WHERE numero = {conta_numero} ")
+    data = cursor.fetchone()
+    data_dict = conta_tuple_to_dict(data)
+    return conta_from_dict(data_dict)
 
 def get_contas() -> list[Conta]:
     '''
     Obter TODAS as Contas.
     '''
+    cursor.execute('SELECT * FROM contas')
+    contas_db = cursor.fetchall()
     result: list[Conta] = []
-    for data in CONTAS:
+    for data in contas_db:
+        conta_dict = conta_tuple_to_dict(data)
         result.append(
-            conta_from_dict(data) # type: ignore[arg-type]
+            conta_from_dict(conta_dict)
         )
     return result
 
-def get_contas_da_agencia(agencia_id: int) -> list[Conta]:
+def get_contas_do_cliente(cliente_id: int) -> list[Conta]:
     '''
     Obter Contas da Agência informada.
     '''
-    contas_da_agencia = [c for c in CONTAS if c['agencia_id'] == agencia_id]
-    return list(map(conta_from_dict, contas_da_agencia))  # type: ignore[arg-type]
+    cursor.execute(f"SELECT * FROM contas WHERE id = {cliente_id} ")
+    contas_db = cursor.fetchall()
 
-def get_contas_do_usuario(usuario_id: int) -> list[Conta]:
-    '''
-    Obter Contas da Agência informada.
-    '''
-    contas_do_usuario = [c for c in CONTAS if c['usuario_id'] == usuario_id]
     result: list[Conta] = []
-    for data in contas_do_usuario:
+    for data in contas_db:
+        conta_dict = conta_tuple_to_dict(data)
         result.append(
-            conta_from_dict(data)  # type: ignore[arg-type]
+            conta_from_dict(conta_dict)  # type: ignore[arg-type]
         )
     return result

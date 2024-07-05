@@ -4,21 +4,23 @@ Regras de negócio - para saque
 
 from datetime import datetime, date
 
-from src.repositorio.movimentacoes_repositorio import get_movimentacao_financeira_do_usuario
+from src.repositorio.movimentacoes_repositorio import(
+    get_movimentacao_financeira_do_cliente
+)
 
 ##################################################
      # VALIDAÇÕES DAS OPERAÇÕES DE SAQUE #
 ##################################################
 
-def pode_sacar_hoje(usuario_id: int) -> bool:
+def pode_sacar_hoje(cliente_id: int) -> bool:
     '''
     Valida o limite de  três saques permitidos para o dia.
     '''
 
     inicio = datetime(date.today().year, date.today().month, date.today().day, 0, 0, 0)
     fim = datetime(date.today().year, date.today().month, date.today().day, 23, 59, 59)
-    movimentacao_usuario = get_movimentacao_financeira_do_usuario(usuario_id)
-    saques = [m for m in movimentacao_usuario if m.valor < 0]
+    movimentacao_cliente = get_movimentacao_financeira_do_cliente(cliente_id)
+    saques = [m for m in movimentacao_cliente if m.valor < 0]
     saques_hoje = [s for s in saques if inicio <= s.date <= fim ]
     if len(saques_hoje) >= 3:
         return False

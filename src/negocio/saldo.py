@@ -4,8 +4,7 @@ Regras de negócio - calculos de saldo
 '''
 
 from src.model.movimentacoes import Movimentacoes
-from src.repositorio.movimentacoes_repositorio import get_movimentacao_financeira_do_usuario
-
+from src.repositorio.movimentacoes_repositorio import get_movimentacao_financeira_do_cliente
 ##################################################
                      # SALDO  #
 ##################################################
@@ -22,10 +21,10 @@ def calcular_saldo_das_movimentacoes(movimentacoes: list[Movimentacoes]) -> floa
         saldo.append(valor)
     return round(sum(saldo), 2)
 
-def calcular_saldo_do_usuario(usuario_id: int ) -> float:
+def calcular_saldo_do_cliente(cliente_id: int ) -> float:
     '''
-    Calcula o saldo do usuário.
+    Calcula o saldo do cliente.
     Retorna o saldo.
     '''
-    movimentacoes_do_usuario = get_movimentacao_financeira_do_usuario(usuario_id)
-    return calcular_saldo_das_movimentacoes(movimentacoes_do_usuario)
+    movimentacoes_do_cliente = get_movimentacao_financeira_do_cliente(cliente_id)
+    return calcular_saldo_das_movimentacoes(movimentacoes_do_cliente)
