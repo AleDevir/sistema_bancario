@@ -5,8 +5,14 @@ Repositório Agência
 from sqlite3 import connect, Cursor
 from src.model.agencia import Agencia, agencia_from_dict
 
-conexao_agencia = connect('C:\\Estudos_python\\operacoes_bancarias_basicas\\src\\db\\banco_de_dados.db')
+conexao_agencia = connect('.\\src\\db\\banco_de_dados.db') # pylint: disable=line-too-long
 cursor: Cursor = conexao_agencia.cursor()
+
+def drop_table_agencias() -> None:
+    '''
+    Apaga a tabela se ela já exixtir.
+    '''
+    cursor.execute("DROP TABLE  IF EXISTS agencias")
 
 def criar_tabela_agencias():
     '''
@@ -24,6 +30,14 @@ def inserir_agencia(numero: int, digito: int ):
     dados =  (numero, digito)
     cursor.execute('INSERT INTO agencias(numero, digito) VALUES(?, ?)', dados) # pylint: disable=line-too-long
     conexao_agencia.commit()
+
+def delete_rows_agencia() -> None:
+    '''
+    Deleta as linhas da tabela.
+    '''
+    cursor.execute("DELETE FROM agencias")
+    conexao_agencia.commit()
+
 #################################################
     # INFRAESTRUTURA #
 #################################################
