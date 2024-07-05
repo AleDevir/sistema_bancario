@@ -1,7 +1,7 @@
 '''
 Módulo com fluxo principal do programa Administrativo.
 '''
-
+from src.repositorio.carga_db_repositorio import carregar_banco_de_dados
 
 if __name__ == "__main__":
-    print('Desenvolver funcionalidades Administrativas.')
+    carregar_banco_de_dados()

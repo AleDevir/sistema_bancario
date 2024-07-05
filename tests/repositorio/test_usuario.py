@@ -4,7 +4,7 @@ Testes do repositorio usuario.py
 pytest tests/repositorio/test_usuario.py -vv
 '''
 
-from src.repositorio.usuario_repositorio import(
+from src.repositorio.cliente_repositorio import(
     get_usuario_by_id,
     get_usuario_by_nome,
     get_usuarios,

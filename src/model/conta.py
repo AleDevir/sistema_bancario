@@ -17,7 +17,7 @@ class Conta(BaseModel):
         digito: int,
         tipo: int,
         agencia_id: int,
-        usuario_id: int
+        cliente_id: int
     ) -> None:
         '''
         Inicialização da classe Conta
@@ -27,11 +27,11 @@ class Conta(BaseModel):
         self.digito: int = digito
         self.tipo: int = tipo
         self.agencia_id: int =  agencia_id
-        self.usuario_id: int = usuario_id
+        self.cliente_id: int = cliente_id
 
 def conta_from_dict(data: dict[str, int]) -> Optional[Conta]:
     '''
-    Recebe os dados e retorna Conta(id, numero, tipo, agencia_id, usuario_id e digito)
+    Recebe os dados e retorna Conta(id, numero, tipo, agencia_id, cliente_id e digito)
     '''
     if not data:
         return None
@@ -41,5 +41,5 @@ def conta_from_dict(data: dict[str, int]) -> Optional[Conta]:
         digito=data.get('digito', 0),
         tipo=data.get('tipo', 0),
         agencia_id=data.get('agencia_id', 0),
-        usuario_id=data.get('usuario_id', 0),
+        cliente_id=data.get('cliente_id', 0),
     )
