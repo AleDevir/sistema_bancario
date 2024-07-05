@@ -57,3 +57,17 @@ pytest tests/ -vv --cov=src
 pytest tests/ -vv --cov=src
 ```
 ![Relatório dos testes>](https://github.com/AleDevir/operacoes_bancarias_basicas/blob/main/img/resultado_do_relatorio_cobertura_de_teste.png)
+
+
+# Diagrama Entidade Relacionamento (DER)
+![DER](https://github.com/AleDevir/operacoes_bancarias_basicas/blob/main/img/der.png)
+
+### Bancos de dados SQLite (sqlite3)
+    Documentação:
+   - [docs.python](https://docs.python.org/3/library/sqlite3.html)
+   - [tutorial SQL](https://www.sqltutorial.org/)
+   - [DB Browser for SQLite](https://github.com/sqlitebrowser/sqlitebrowser/wiki)
+
+### Download - Visualização sqlite:
+[DB4S 3.12.2](https://sqlitebrowser.org/dl/)
+

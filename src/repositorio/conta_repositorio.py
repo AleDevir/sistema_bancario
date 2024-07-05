@@ -8,8 +8,15 @@ from sqlite3 import connect, Cursor
 from typing import Optional
 from src.model.conta import Conta, conta_from_dict
 
-conexao_conta = connect('C:\\Estudos_python\\operacoes_bancarias_basicas\\src\\db\\banco_de_dados.db')
+conexao_conta = connect('.\\src\\db\\banco_de_dados.db')
 cursor: Cursor = conexao_conta.cursor()
+
+
+def drop_table_contas() -> None:
+    '''
+    Apaga a tabela se ela já exixtir.
+    '''
+    cursor.execute("DROP TABLE IF EXISTS contas")
 
 def criar_tabela_contas():
     '''
@@ -32,6 +39,13 @@ def inserir_conta(numero: int, digito: int, tipo: int, agencia_id: int, cliente_
     '''
     dados =  (numero, digito, tipo, agencia_id, cliente_id)
     cursor.execute('INSERT INTO contas(numero, digito, tipo, agencia_id, cliente_id) VALUES(?, ?,  ?, ?, ?)', dados) # pylint: disable=line-too-long
+    conexao_conta.commit()
+
+def delete_rows_conta() -> None:
+    '''
+    Deleta as linhas da tabela.
+    '''
+    cursor.execute("DELETE FROM contas")
     conexao_conta.commit()
 
 #################################################

@@ -5,10 +5,16 @@ from sqlite3 import connect, Cursor
 import bcrypt
 from src.model.cliente import Cliente, cliente_from_dict
 
-conexao_cliente = connect('C:\\Estudos_python\\operacoes_bancarias_basicas\\src\\db\\banco_de_dados.db')
+conexao_cliente = connect('.\\src\\db\\banco_de_dados.db') # pylint: disable=line-too-long
 cursor: Cursor = conexao_cliente.cursor()
 
-def criar_tabela_clientes():
+def drop_table_clientes() -> None:
+    '''
+    Apaga a tabela se ela já exixtir.
+    '''
+    cursor.execute("DROP TABLE IF EXISTS clientes")
+
+def criar_tabela_clientes()-> None:
     '''
     Cria a tabela clientes
     '''
@@ -21,12 +27,19 @@ def criar_tabela_clientes():
 
 
 
-def inserir_cliente(nome: str, sobrenome: str, senha_hash: str, cpf: str):
+def inserir_cliente(nome: str, sobrenome: str, senha_hash: str, cpf: str) -> None:
     '''
     Inseri cliente na tabela.
     '''
     dados =  (nome.title(), sobrenome.title(), senha_hash, cpf)
-    cursor.execute('INSERT INTO clientes(nome, sobrenome, senha, cpf) VALUES(?, ?, ?, ?)', dados)
+    cursor.execute('INSERT INTO clientes(nome, sobrenome, senha, cpf) VALUES(?, ?, ?, ?)', dados) 
+    conexao_cliente.commit()
+
+def delete_rows_cliente() -> None:
+    '''
+    Deleta as linhas da tabela.
+    '''
+    cursor.execute("DELETE FROM clientes")
     conexao_cliente.commit()
 
 #################################################

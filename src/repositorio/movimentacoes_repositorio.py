@@ -5,8 +5,14 @@ from sqlite3 import connect, Cursor
 from datetime import datetime
 from src.model.movimentacoes import Movimentacoes, movimentacao_from_dict
 
-conexao_movimentacoes = connect('C:\\Estudos_python\\operacoes_bancarias_basicas\\src\\db\\banco_de_dados.db')
+conexao_movimentacoes = connect('.\\src\\db\\banco_de_dados.db')
 cursor: Cursor = conexao_movimentacoes.cursor()
+
+def drop_table_movimentacoes() -> None:
+    '''
+    Apaga a tabela se ela já exixtir.
+    '''
+    cursor.execute("DROP TABLE IF EXISTS movimentacoes")
 
 def criar_tabela_movimentacoes():
     '''
@@ -29,6 +35,14 @@ def inserir_movimentacoes(valor: float, date: datetime, conta_id: int ):
     cursor.execute('INSERT INTO movimentacoes(valor, date, conta_id) VALUES(?, ?,  ?)', dados) # pylint: disable=line-too-long
     conexao_movimentacoes.commit()
 
+def delete_rows_movimentacao() -> None:
+    '''
+    Deleta as linhas da tabela.
+    '''
+    cursor.execute("DELETE FROM movimentacoes")
+    conexao_movimentacoes.commit()
+
+
 #################################################
     # INFRAESTRUTURA #
 #################################################
@@ -38,14 +52,12 @@ def movimentacao_tuple_to_dict(data: tuple) -> dict[str, int]:
     Transforma um elemento (tuple) do banco de dados em uma estrutura de dicionário.
     Retorna o dicionário com dados da conta.
     '''
-    
     idt, valor, date, conta_id = data
     return {
         'id': idt,
         'valor': valor,
         'date': date,
-        'conta_id': conta_id,
-        
+        'conta_id': conta_id    
     }
 
 #################################################
