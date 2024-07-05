@@ -10,9 +10,13 @@
 + [![Mypy](https://img.shields.io/badge/Mypy-darkblue)](https://mypy.readthedocs.io/en/stable/)
 + [![Pytest](https://img.shields.io/badge/Pytest-orange)](https://pypi.org/project/pytest/)
 + [![Bcrypt](https://img.shields.io/badge/Bcrypt-ligthbluee)](https://pypi.org/project/bcrypt/)
++ [![Python-sqlite3](https://img.shields.io/badge/Python-sqlite3-violet)](https://docs.python.org/3/library/sqlite3.html)
++ [![Tutorial-SQL](https://img.shields.io/badge/Tutorial-SQL-yellow)](https://www.sqltutorial.org/)
++ [![DB Browser for SQLite](https://img.shields.io/badge/DBBrowser-SQLite-darkgreen)](https://github.com/sqlitebrowser/sqlitebrowser/wiki)
 
 
-
+### Diagrama Entidade Relacionamento (DER)
+![DER](https://github.com/AleDevir/operacoes_bancarias_basicas/blob/main/img/der.png)
 
  ### Instalações:
 ```
@@ -32,6 +36,8 @@ pip install bcrypt
 pip install pytest-cov
 
 ```
+#### Download - Visualização sqlite
+[![DB4S 3.12.2](https://img.shields.io/badge/DB4S-blue)](https://www.python.org/downloads/)
 
 ### Comandos para Verificação Estática de Código (pylint e mypy):
 ```
@@ -59,15 +65,6 @@ pytest tests/ -vv --cov=src
 ![Relatório dos testes>](https://github.com/AleDevir/operacoes_bancarias_basicas/blob/main/img/resultado_do_relatorio_cobertura_de_teste.png)
 
 
-# Diagrama Entidade Relacionamento (DER)
-![DER](https://github.com/AleDevir/operacoes_bancarias_basicas/blob/main/img/der.png)
 
-### Bancos de dados SQLite (sqlite3)
-    Documentação:
-   - [docs.python](https://docs.python.org/3/library/sqlite3.html)
-   - [tutorial SQL](https://www.sqltutorial.org/)
-   - [DB Browser for SQLite](https://github.com/sqlitebrowser/sqlitebrowser/wiki)
 
-### Download - Visualização sqlite:
-[DB4S 3.12.2](https://sqlitebrowser.org/dl/)
 
