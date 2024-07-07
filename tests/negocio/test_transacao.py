@@ -16,12 +16,8 @@ def test_pode_sacar_hoje():
     Teste do metodo pode_sacar_hoje() - OPÇÃO VÁLIDA
     pytest tests/negocio/test_transacao.py::test_pode_sacar_hoje -vv
     '''
-    auth = {
-        'usuario_id': 5,
-        'usuario_nome': 'test'
-
-    }
-    pode_sacar_hoje(auth)
+    conta_id =  1
+    pode_sacar_hoje(conta_id)
     assert True
 
 def test_pode_sacar_hoje_invalido():
@@ -29,8 +25,8 @@ def test_pode_sacar_hoje_invalido():
     Teste do metodo pode_sacar_hoje() - OPÇÃO INVÁLIDA
     pytest tests/negocio/test_transacao.py::test_pode_sacar_hoje_invalido -vv
     '''
-    usuario_id = 3
-    pode_sacar = pode_sacar_hoje(usuario_id)
+    conta_id = 4
+    pode_sacar = pode_sacar_hoje(conta_id)
     assert not pode_sacar
 
 def test_validar_saque_valido():
@@ -97,16 +93,16 @@ class Test(TestCase):
         Teste do metodo pode_sacar_hoje() - OPÇÃO VÁLIDA
         python -m unittest -v tests.negocio.test_transacao.Test.test_pode_sacar_hoje_valido -v
         '''
-        usuario_id = 5
-        self.assertTrue(pode_sacar_hoje(usuario_id))
+        cliente_id = 5
+        self.assertTrue(pode_sacar_hoje(cliente_id))
 
     def test_pode_sacar_hoje_invalido(self):
         '''
         Teste do metodo pode_sacar_hoje() - OPÇÃO INVÁLIDA
         python -m unittest -v tests.negocio.test_transacao.Test.test_pode_sacar_hoje_invalido -v
         '''
-        usuario_id = 3
-        self.assertFalse(pode_sacar_hoje(usuario_id))
+        cliente_id = 4
+        self.assertFalse(pode_sacar_hoje(cliente_id))
 
     def test_validar_saque_valido(self):
         '''

@@ -3,6 +3,8 @@ Model das movimentações finaceiras
 '''
 from sqlite3 import connect, Cursor
 from datetime import datetime
+
+import src.repositorio.config_sqlite3_date
 from src.model.movimentacoes import Movimentacoes, movimentacao_from_dict
 
 conexao_movimentacoes = connect('.\\src\\db\\banco_de_dados.db')
@@ -32,7 +34,7 @@ def inserir_movimentacoes(valor: float, date: datetime, conta_id: int ):
     Inseri conta na tabela.
     '''
     dados =  (valor, date, conta_id)
-    cursor.execute('INSERT INTO movimentacoes(valor, date, conta_id) VALUES(?, ?,  ?)', dados) # pylint: disable=line-too-long
+    cursor.execute('INSERT INTO movimentacoes(valor, date, conta_id) VALUES(?, ?, ?)', dados) # pylint: disable=line-too-long
     conexao_movimentacoes.commit()
 
 def delete_rows_movimentacao() -> None:
@@ -96,7 +98,7 @@ def get_movimentacao_financeira_do_cliente(conta_id: int) -> list[Movimentacoes]
     Obtem dados da movimentação financeira do cliente(depósitos, saques e saldo)
     Retorna a movimentação.
     '''
-    cursor.execute(f"SELECT * FROM movimentacoes WHERE conta_id = '{conta_id}' ")
+    cursor.execute(f"SELECT * FROM movimentacoes WHERE conta_id = {conta_id} ")
     movimentacoes_db = cursor.fetchall()
     result: list[Movimentacoes] = []
     for data in movimentacoes_db:

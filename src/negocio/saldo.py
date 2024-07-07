@@ -21,10 +21,10 @@ def calcular_saldo_das_movimentacoes(movimentacoes: list[Movimentacoes]) -> floa
         saldo.append(valor)
     return round(sum(saldo), 2)
 
-def calcular_saldo_do_cliente(cliente_id: int ) -> float:
+def calcular_saldo_do_cliente(conta_id: int ) -> float:
     '''
     Calcula o saldo do cliente.
     Retorna o saldo.
     '''
-    movimentacoes_do_cliente = get_movimentacao_financeira_do_cliente(cliente_id)
+    movimentacoes_do_cliente = get_movimentacao_financeira_do_cliente(conta_id)
     return calcular_saldo_das_movimentacoes(movimentacoes_do_cliente)

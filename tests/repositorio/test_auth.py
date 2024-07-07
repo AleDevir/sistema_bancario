@@ -15,7 +15,7 @@ def test_auth():
     pytest tests/repositorio/test_auth.py::test_auth -vv
     '''
     senha = '123'
-    conta_numero = 777777
+    conta_numero = 7777
     auth = get_auth(conta_numero, senha)
     assert auth
     assert 'conta_numero' in auth
@@ -26,12 +26,13 @@ def test_auth_error():
     Teste do metodo get_auth
     pytest tests/repositorio/test_auth.py::test_auth_error -vv
     '''
+    
+    
     senha = '123'
     conta_numero = 8577777
     erro = f"Não foi possível obter a conta de número {conta_numero}!"
     with pytest.raises(AuthException, match=erro):
         get_auth(conta_numero, senha)
-
 
 def test_auth_error_manual():
     '''
@@ -45,5 +46,5 @@ def test_auth_error_manual():
         assert False
     except AuthException as error:
         assert True
-        assert str(error) ==f"Não foi possível obter a conta de número {conta_numero}!"
+        assert str(error) == f"Não foi possível obter a conta de número {conta_numero}!"
 
