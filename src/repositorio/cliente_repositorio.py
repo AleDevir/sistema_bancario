@@ -31,8 +31,8 @@ def inserir_cliente(nome: str, sobrenome: str, senha_hash: str, cpf: str) -> Non
     '''
     Inseri cliente na tabela.
     '''
-    dados =  (nome.title(), sobrenome.title(), senha_hash, cpf)
-    cursor.execute('INSERT INTO clientes(nome, sobrenome, senha, cpf) VALUES(?, ?, ?, ?)', dados) 
+    dados =  (nome, sobrenome, senha_hash, cpf)
+    cursor.execute('INSERT INTO clientes(nome, sobrenome, senha, cpf) VALUES(?, ?, ?, ?)', dados)
     conexao_cliente.commit()
 
 def delete_rows_cliente() -> None:
@@ -72,15 +72,18 @@ def get_cliente_by_id(cliente_id: int) -> Cliente:
     data = cursor.fetchone()
     data_dict = cliente_tuple_to_dict(data)
     return cliente_from_dict(data_dict)
-    
+
 
 def get_cliente_by_nome(cliente_nome: str) -> Cliente:
     '''
     Obter um Usuário pelo NOME.
     '''
+    print(f"cliente nome: {cliente_nome} ############################")
     cursor.execute(f"SELECT * FROM clientes WHERE nome = '{cliente_nome}' ")
     data = cursor.fetchone()
+    print(f"data: {data} ############################")
     data_dict = cliente_tuple_to_dict(data)
+    print(f"data_dict: {data_dict} ############################")
     return cliente_from_dict(data_dict)
 
 def get_clientes() -> list[Cliente]:

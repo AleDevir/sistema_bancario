@@ -30,7 +30,7 @@ from src.util.data_e_hora_util import exibir_data_e_hora, formatar_data_e_hora
 
 
 
-LINHA_TRACEJADA: Final[str] = '-' * 71
+LINHA_TRACEJADA: Final[str] = '-' * 51
 #################################################
     # INFRAESTRUTURA #
 #################################################
@@ -73,8 +73,8 @@ def timestamp(funcao):
 
 def get_auth_na_conta() -> dict[str, str | int]:
     '''
-    Obtem um cliente cadastrado.
-    Retorna o cliente.
+    Obtem uma conta cadastrada.
+    Retorna a conta.
     '''
     auth: dict[str, str | int ] = {}
     while not auth:
@@ -156,27 +156,27 @@ def escolher_uma_opcao_do_menu_entrada() -> str:
 ##################################################
 
 @timestamp
-def sacar(cliente_id: int) -> None:
+def sacar(conta_id: int) -> None:
     '''
     Obtem o valor de saque inserido pelo cliente.
     Inseri o resultado na estrutura de dados.
     '''
-    if not pode_sacar_hoje(cliente_id):
+    if not pode_sacar_hoje(conta_id):
         print(vermelho('\n Você já atingiu o limite de saques por dia!\n')) # pylint: disable=line-too-long
         return
 
-    saldo = calcular_saldo_do_cliente(cliente_id)
+    saldo = calcular_saldo_do_cliente(conta_id)
     while True:
         saque = input_float("Entre com o valor do saque R$: ")
         saque_invalido = validar_saque(saque, saldo)
         if saque_invalido:
             print(f"\n{vermelho(saque_invalido)}\n")
         else:
-            add_movimentacao(-saque, cliente_id)
+            add_movimentacao(-saque, conta_id)
             break
 
 @timestamp
-def depositar(cliente_id: int) -> None:
+def depositar(conta_id: int) -> None:
     '''
     Deposita valores positivos na conta.
     '''
@@ -186,7 +186,7 @@ def depositar(cliente_id: int) -> None:
             print(vermelho(f'\nValor {deposito} inválido! Por favor tente novamente.\n')) # pylint: disable=line-too-long
         else:
             if deposito:
-                add_movimentacao(deposito, cliente_id)
+                add_movimentacao(deposito, conta_id)
             break
 
 ##################################################

@@ -13,11 +13,20 @@ from src.app import (
     siglas_das_opcoes_menu_entrada,
     exibir_mensagem_de_boas_vindas,
     exibir_extrato,
-    get_movimentacao_financeira_do_usuario,
+    get_movimentacao_financeira_do_cliente,
     caixa_eletronico,
     sacar,
     depositar
 )
+from src.repositorio.carga_db_repositorio import carregar_banco_de_dados
+
+def setup_module(module): # pylint: disable=unused-argument
+    '''
+    Setup na base de dados 
+    '''
+    carregar_banco_de_dados()
+
+
 
 class Test(TestCase):
     '''
@@ -29,15 +38,15 @@ class Test(TestCase):
 
     @patch('src.app.input_int')
     @patch('src.app.get_senha')
-    def test_obter_usuario_valido(self, get_senha, input_int):
+    def test_obter_cliente_valido(self, get_senha, input_int):
         '''
         Teste para input das credenciais do usuario (conta e senha).  CONTA_E_SENHA-VÁLIDOS 
-        python -m unittest -v tests.test_app.Test.test_obter_usuario_valido -v
+        python -m unittest -v tests.test_app.Test.test_obter_cliente_valido -v
         '''
         msg_conta = "\n Conta Corrente: "
         msg_senha = " Senha: "
         get_senha.return_value = '123'
-        conta_usuario = 555555
+        conta_usuario = 5555
         input_int.return_value = conta_usuario
         auth = get_auth_na_conta()
         self.assertIsNotNone(auth, 'Conta esperada não é CONTA')
@@ -51,15 +60,15 @@ class Test(TestCase):
 
     @patch('src.app.input_int')
     @patch('src.app.get_senha')
-    def test_obter_usuario_senha_invalida(self, get_senha, input_int):
+    def test_obter_cliente_senha_invalida(self, get_senha, input_int):
         '''
         Teste para input das credencial senha inválida do usuario (conta e senha).  SENHA-INVÁLIDA 
-        python -m unittest -v tests.test_app.Test.test_obter_usuario_senha_invalida -v
+        python -m unittest -v tests.test_app.Test.test_obter_cliente_senha_invalida -v
         '''
         msg_conta = "\n Conta Corrente: "
         msg_senha = " Senha: "
         get_senha.side_effect = ['SENHA INVÁLIDA', '123']
-        conta_usuario = 555555
+        conta_usuario = 5555
         input_int.return_value = conta_usuario
         auth = get_auth_na_conta()
         self.assertIsNotNone(auth, 'Usuário esperado não é NONE')
@@ -86,7 +95,7 @@ class Test(TestCase):
     def test_escolher_uma_opcao_do_menu_entrada_valido(self, input_opcoes):
         '''
         Teste para input das opções do menu: ['E', D', 'S', 'F'] OPÇÃO-VÁLIDA.
-        python -m unittest -v tests.app.Test.test_escolher_uma_opcao_do_menu_entrada_valido -v
+        python -m unittest -v test_app.Test.test_escolher_uma_opcao_do_menu_entrada_valido -v
         '''
         msg = 'Entre com a opção desejada: '
         input_opcoes.return_value = 'E'
@@ -121,15 +130,14 @@ class Test(TestCase):
     def test_sacar_valido(self, input_float):
         '''
         Teste do metodo sacar() - OPÇÃO VÁLIDA
-        python -m unittest -v tests.app.Test.test_sacar_valido -v
+        python -m unittest -v tests.test_app.Test.test_sacar_valido -v
         '''
-        usuario_id = 4
+        conta_id = 1
 
         msg = "Entre com o valor do saque R$: "
         saque = 50
         input_float.return_value = saque
-        input_float.side_effect = [saque]
-        sacar(usuario_id)
+        sacar(conta_id)
         input_float.assert_has_calls([
             call(msg)
         ])
@@ -138,15 +146,14 @@ class Test(TestCase):
     def test_sacar_valor_invalido(self, input_float):
         '''
         Teste do metodo sacar() - OPÇÃO INVÁLIDA
-        python -m unittest -v tests.app.Test.test_sacar_valor_invalido -v
+        python -m unittest -v tests.test_app.Test.test_sacar_valor_invalido -v
         '''
-        usuario_id = 5
+        conta_id = 2
 
         msg = "Entre com o valor do saque R$: "
-        saque = 150
-        input_float.return_value = saque
+        saque = 10
         input_float.side_effect = [-1, saque]
-        sacar(usuario_id)
+        sacar(conta_id)
         input_float.assert_has_calls([
             call(msg),
             call(msg),
@@ -155,29 +162,25 @@ class Test(TestCase):
     def test_sacar_excedeu_o_limite_do_dia(self):
         '''
         Teste do metodo sacar() - OPÇÃO INVÁLIDA
-        python -m unittest -v tests.app.Test.test_sacar_excedeu_o_limite_do_dia -v
+        python -m unittest -v tests.test_app.Test.test_sacar_excedeu_o_limite_do_dia -v
         '''
-        usuario_id = 3
+        conta_id = 4
 
-        sacar(usuario_id)
+        sacar(conta_id)
         assert True # Você já atingiu o limite de saques por dia!
 
     @patch('src.app.input_float')
     def test_depositar_valido(self, input_float):
         '''
         Teste do metodo depositar() - OPÇÃO VÁLIDA
-        python -m unittest -v tests.app.Test.test_depositar_valido -v
+        python -m unittest -v tests.test_app.Test.test_depositar_valido -v
         '''
-        auth = {
-        'usuario_id': 2,
-        'usuario_nome': 'test'
-        }
+        conta_id = 2
 
         msg = "\nEntre com o valor do depósito R$: "
         deposito = 50
         input_float.return_value = deposito
-        input_float.side_effect = [deposito]
-        depositar(auth)
+        depositar(conta_id)
         input_float.assert_has_calls([
             call(msg)
         ])
@@ -186,18 +189,14 @@ class Test(TestCase):
     def test_depositar_invalido(self, input_float):
         '''
         Teste do metodo depositar() - OPÇÃO INVÁLIDA
-        python -m unittest -v tests.app.Test.test_depositar_invalido -v
+        python -m unittest -v tests.test_app.Test.test_depositar_invalido -v
         '''
-        auth = {
-        'usuario_id': 2,
-        'usuario_nome': 'test'
-        }
+        conta_id = 2
 
         msg = "\nEntre com o valor do depósito R$: "
         deposito = 50
-        input_float.return_value = deposito
         input_float.side_effect = [-1, deposito]
-        depositar(auth)
+        depositar(conta_id)
         input_float.assert_has_calls([
             call(msg)
         ])
@@ -224,10 +223,9 @@ class Test(TestCase):
         Teste do fluxo principal - caixa_eletronico() 
         python -m unittest -v tests.test_app.Test.test_caixa_eletronico_opcao -v
         '''
-
         get_auth_na_conta_mock.return_value =  {
-            'usuario_id': 5,
-            'usuario_nome': 'test'
+            'conta_id': 5,
+            'cliente_nome': 'test'
         }
         escolher_uma_opcao_do_menu_entrada_mock.side_effect = ['D', 'E', 'S', 'F']
         exibir_extrato_mock.return_value = None
@@ -272,31 +270,31 @@ def test_mensagem_boas_vindas_boa_noite():
 ###########################################################
     # TESTES  DAS MOVIMENTAÇÕES #
 ##########################################################
-def test_get_movimentacao_financeira_do_usuario_valida():
+def test_get_movimentacao_financeira_do_cliente_valida():
     '''
     Teste do metodo get_movimentacao_financeira_do_usuario - VÁLIDO
-    pytest tests/test_app.py::test_get_movimentacao_financeira_do_usuario_valida -vv
+    pytest tests/test_app.py::test_get_movimentacao_financeira_do_cliente_valida -vv
     '''
-    usuario_id = 1
-    movimentacoes = get_movimentacao_financeira_do_usuario(usuario_id)
+    conta_id = 1
+    movimentacoes = get_movimentacao_financeira_do_cliente(conta_id)
     for movimentacao in movimentacoes:
-        assert movimentacao.usuario_id == usuario_id
+        assert movimentacao.conta_id == conta_id
 
-def test_get_movimentacao_financeira_do_usuario_invalida():
+def test_get_movimentacao_financeira_do_cliente_invalida():
     '''
     Teste do metodo get_movimentacao_financeira_do_usuario - INVÁLIDO
-    pytest tests/test_app.py::test_get_movimentacao_financeira_do_usuario_invalida -vv
+    pytest tests/test_app.py::test_get_movimentacao_financeira_do_cliente_invalida -vv
     '''
-    usuario_id = 999
-    movimentacoes = get_movimentacao_financeira_do_usuario(usuario_id)
+    cliente_id = 999
+    movimentacoes = get_movimentacao_financeira_do_cliente(cliente_id)
     for movimentacao in movimentacoes:
-        assert movimentacao.usuario_id == usuario_id
+        assert movimentacao.cliente_id == cliente_id
 
 def test_exibir_extrato():
     '''
     Teste do metodo exibir_extrato 
     pytest tests/test_app.py::test_exibir_extrato -vv
     '''
-    usuario_id = 5
-    exibir_extrato(usuario_id)
+    cliente_id = 5
+    exibir_extrato(cliente_id)
     assert True

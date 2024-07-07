@@ -3,7 +3,10 @@ model Transacoes()
 '''
 from datetime import datetime
 from src.model.base_model import BaseModel
-from src.util.data_e_hora_util import converter_em_data_e_hora
+from src.util.data_e_hora_util import (
+    converter_em_data_e_hora,
+    converter_timestamp_to_datetime
+)
 
 class Movimentacoes(BaseModel):
     '''
@@ -32,12 +35,14 @@ def movimentacao_from_dict(data: dict[str, str | datetime | float]) -> Movimenta
     '''
     Recebe os dados e retorna Conta(id, numero, tipo, agencia_id, usuario_id e digito)
     '''
-    data_str = data.get('date', '')
-    data_hora = converter_em_data_e_hora(data_str)
-    return Movimentacoes(
+    data_informada = data.get('date')
+    data_hora = converter_timestamp_to_datetime(data_informada)
+    mov =  Movimentacoes(
         idt=data.get('id', 0),  # type: ignore[arg-type]
         valor=data.get('valor', 0),  # type: ignore[arg-type]
         date=data_hora,
         conta_id=data.get('conta_id', 0),  # type: ignore[arg-type]
         cliente_id=data.get('cliente_id', 0),  # type: ignore[arg-type]
     )
+    print(f"Motimentacao={mov}")
+    return mov

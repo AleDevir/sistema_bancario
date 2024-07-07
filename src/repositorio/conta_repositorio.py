@@ -57,6 +57,8 @@ def conta_tuple_to_dict(data: tuple) -> dict[str, int]:
     Transforma um elemento (tuple) do banco de dados em uma estrutura de dicionário.
     Retorna o dicionário com dados da conta.
     '''
+    if not data:
+        return {}
     idt, numero, digito, tipo, agencia_id, cliente_id =  data
     return {
         'id': idt,

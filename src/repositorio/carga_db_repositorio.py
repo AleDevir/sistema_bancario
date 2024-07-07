@@ -73,6 +73,7 @@ def carregar_banco_de_dados() -> None:
     inserir_movimentacoes(-10.50, data_hora, 1)
     inserir_movimentacoes(-15.50, data_hora, 4)
     inserir_movimentacoes(-35.00, data_hora, 4)
+    inserir_movimentacoes(-75.00, data_hora, 4)
     inserir_movimentacoes(-53.00, datetime(2021, 6, 10, 15, 10, 00), 4)
     inserir_movimentacoes(330.90, datetime(2021, 6, 12, 12, 10, 00), 4)
     inserir_movimentacoes(500.00, datetime(2021, 6, 9, 23, 10, 00), 6)

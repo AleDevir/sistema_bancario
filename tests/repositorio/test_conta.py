@@ -8,8 +8,7 @@ from src.repositorio.conta_repositorio import(
     get_conta_by_id,
     get_conta_by_numero,
     get_contas,
-    get_contas_da_agencia,
-    get_contas_do_usuario,
+    get_contas_do_cliente,
 )
 
 def test_get_conta_by_id():
@@ -27,7 +26,7 @@ def test_get_conta_by_numero():
     Teste do metodo get_conta_by_numero
     pytest tests/repositorio/test_conta.py::test_get_conta_by_numero -vv
     '''
-    conta_numero =  777777
+    conta_numero =  7777
     conta = get_conta_by_numero(conta_numero)
     assert conta.numero == conta_numero
 
@@ -39,22 +38,12 @@ def test_get_contas():
     contas = get_contas()
     assert contas
 
-def test_get_contas_da_agencia():
-    '''
-    Teste do metodo get_contas_da_agencia
-    pytest tests/repositorio/test_conta.py::test_get_contas_da_agencia -vv
-    '''
-    agencia_id = 1
-    contas = get_contas_da_agencia(agencia_id)
-    for conta in contas:
-        assert conta.agencia_id == agencia_id
-
-def test_get_contas_do_usuario():
+def test_get_contas_do_cliente():
     '''
     Teste do metodo get_contas_do_usuario
-    pytest tests/repositorio/test_conta.py::test_get_contas_do_usuario -vv
+    pytest tests/repositorio/test_conta.py::test_get_contas_do_cliente -vv
     '''
-    usuario_id = 1
-    contas = get_contas_do_usuario(usuario_id)
+    cliente_id = 1
+    contas = get_contas_do_cliente(cliente_id)
     for conta in contas:
-        assert conta.usuario_id == usuario_id
+        assert conta.cliente_id == cliente_id
