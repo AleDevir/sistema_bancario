@@ -1,4 +1,4 @@
-# ${\color{#b3903f} Operações Bancárias}$  
+# ${\color {#b3903f} SistemaBasico Bancario}$  
 <img src="https://cdn-icons-png.flaticon.com/512/1052/1052854.png" width='40'/>  Repositório desenvolvido com Python 3.12 para fins de aprendizado, contendo estrutura de testes e checagem estática de código utilizando Pytest e Mypy.
  [Operações Bancárias](https://github.com/AleDevir/operacoes_bancarias_basicas)
  
