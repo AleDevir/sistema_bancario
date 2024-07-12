@@ -100,9 +100,9 @@ def get_contas() -> list[Conta]:
     result: list[Conta] = []
     for data in contas_db:
         conta_dict = conta_tuple_to_dict(data)
-        result.append(
-            conta_from_dict(conta_dict)
-        )
+        conta = conta_from_dict(conta_dict)
+        if conta:
+            result.append(conta)
     return result
 
 def get_contas_do_cliente(cliente_id: int) -> list[Conta]:

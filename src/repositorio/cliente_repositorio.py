@@ -25,8 +25,6 @@ def criar_tabela_clientes()-> None:
                     senha text  NOT NULL,
                     cpf text UNIQUE NOT NULL)''')
 
-
-
 def inserir_cliente(nome: str, sobrenome: str, senha_hash: str, cpf: str) -> None:
     '''
     Inseri cliente na tabela.
@@ -34,6 +32,14 @@ def inserir_cliente(nome: str, sobrenome: str, senha_hash: str, cpf: str) -> Non
     dados =  (nome, sobrenome, senha_hash, cpf)
     cursor.execute('INSERT INTO clientes(nome, sobrenome, senha, cpf) VALUES(?, ?, ?, ?)', dados)
     conexao_cliente.commit()
+
+# def atualizar_cliente(cursor: Cursor, nome: str, cliente_id: int):
+#     cursor.execute(f"UPDATE clientes SET nome = '{nome}' WHERE id = {cliente_id}")
+#     conexao_cliente.commit()
+
+# def deletar_cliente(cursor: Cursor, id: int):
+#     cursor.execute(f"DELETE FROM clientes WHERE id={id}")
+#     conexao_cliente.commit()
 
 def delete_rows_cliente() -> None:
     '''
@@ -46,7 +52,7 @@ def delete_rows_cliente() -> None:
     # INFRAESTRUTURA #
 #################################################
 
-def cliente_tuple_to_dict(data: tuple) -> dict[str, int]:
+def cliente_tuple_to_dict(data: tuple) -> dict[str, str | int | bytes]:
     '''
     Transforma um elemento (tuple) do banco de dados em uma estrutura de dicionário.
     Retorna o dicionário com dados da conta.
@@ -78,12 +84,10 @@ def get_cliente_by_nome(cliente_nome: str) -> Cliente:
     '''
     Obter um Usuário pelo NOME.
     '''
-    print(f"cliente nome: {cliente_nome} ############################")
+
     cursor.execute(f"SELECT * FROM clientes WHERE nome = '{cliente_nome}' ")
     data = cursor.fetchone()
-    print(f"data: {data} ############################")
     data_dict = cliente_tuple_to_dict(data)
-    print(f"data_dict: {data_dict} ############################")
     return cliente_from_dict(data_dict)
 
 def get_clientes() -> list[Cliente]:
