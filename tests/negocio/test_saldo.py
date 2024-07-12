@@ -7,7 +7,7 @@ from datetime import datetime
 from src.negocio.saldo import(
     calcular_saldo_das_movimentacoes,
     calcular_saldo_do_cliente
-    
+ 
 )
 from src.model.movimentacoes import Movimentacoes
 

@@ -15,8 +15,8 @@ from src.util.console_util import (
     print_center,
     limpar_console
 )
-from src.util.menu_util import exibir_menu
-from src.util.input_util import input_opcoes, input_int
+from src.util.menu_util import escolher_uma_opcao_do_menu_entrada
+from src.util.input_util import input_int, input_float
 from src.auth.authentication import get_auth
 from src.repositorio.movimentacoes_repositorio import (
     add_movimentacao,
@@ -24,7 +24,6 @@ from src.repositorio.movimentacoes_repositorio import (
 )
 from src.negocio.saldo import  calcular_saldo_do_cliente
 from src.negocio.transacao import pode_sacar_hoje, validar_saque
-from src.util.input_util import input_float
 from src.util.execptions import AuthException
 from src.util.data_e_hora_util import exibir_data_e_hora, formatar_data_e_hora
 
@@ -124,7 +123,7 @@ def exibir_extrato(cliente_id: int) -> None:
 
 
 ##################################################
-     # OPÇOES DO MENU #
+     # OPÇOES DO MENU CLIENTE #
 ##################################################
 
 opcoes_do_menu_entrada:  dict[str, str ] = {
@@ -133,23 +132,6 @@ opcoes_do_menu_entrada:  dict[str, str ] = {
         'S': 'Saque', 
         'F': 'Finalizar e sair da conta.',
 }
-
-siglas_das_opcoes_menu_entrada: list[str] = list(opcoes_do_menu_entrada)
-
-def escolher_uma_opcao_do_menu_entrada() -> str:
-    '''
-    Escolhe uma opção do menu.
-    Retorna uma das opções do menu: ['E', D', 'S', 'F'].
-    '''
-    exibir_menu(opcoes_do_menu_entrada)
-    escolher_opcao = input_opcoes('Entre com a opção desejada: ', siglas_das_opcoes_menu_entrada).upper() # pylint: disable=line-too-long
-    while escolher_opcao not in siglas_das_opcoes_menu_entrada:
-        print(f"\n Opção '{vermelho(escolher_opcao)}' inválida! As opções válidas são: {verde(', '.join(siglas_das_opcoes_menu_entrada))} \n") # pylint: disable=line-too-long
-        escolher_opcao = input_opcoes(
-            'Entre com a opção desejada: ',
-             siglas_das_opcoes_menu_entrada
-        ).upper()
-    return escolher_opcao
 
 ##################################################
      # OPERAÇÕES FINANCEIRAS #
@@ -202,7 +184,7 @@ def caixa_eletronico() -> None:
     limpar_console()
     exibir_mensagem_de_boas_vindas(str(auth['cliente_nome']))
     while True:
-        opcao = escolher_uma_opcao_do_menu_entrada()
+        opcao = escolher_uma_opcao_do_menu_entrada(opcoes_do_menu_entrada)
         if opcao == "E":
             exibir_extrato(int(auth['conta_id']))
         if opcao == "D":

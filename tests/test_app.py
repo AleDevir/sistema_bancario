@@ -7,10 +7,10 @@ pytest tests/test_app.py -vv
 from unittest.mock import patch, call
 from unittest import TestCase
 from datetime import datetime
+
 from src.app import (
     get_auth_na_conta,
     escolher_uma_opcao_do_menu_entrada,
-    siglas_das_opcoes_menu_entrada,
     exibir_mensagem_de_boas_vindas,
     exibir_extrato,
     get_movimentacao_financeira_do_cliente,
@@ -91,35 +91,49 @@ class Test(TestCase):
     # TESTES  ESCOLHER OPÇÃO DA OPERAÇÃO/E OU MOVIMENTÇÃO #
     #######################################################
 
-    @patch('src.app.input_opcoes')
+    @patch('src.util.menu_util.input_opcoes')
     def test_escolher_uma_opcao_do_menu_entrada_valido(self, input_opcoes):
         '''
         Teste para input das opções do menu: ['E', D', 'S', 'F'] OPÇÃO-VÁLIDA.
-        python -m unittest -v test_app.Test.test_escolher_uma_opcao_do_menu_entrada_valido -v
+        python -m unittest -v tests.test_app.Test.test_escolher_uma_opcao_do_menu_entrada_valido -v
         '''
+        opcoes_do_menu_entrada = {
+        'E': 'Extrato',
+        'D': 'Depósito',
+        'S': 'Saque', 
+        'F': 'Finalizar e sair da conta.',
+        }
+        siglas: list[str] = list(opcoes_do_menu_entrada)
         msg = 'Entre com a opção desejada: '
         input_opcoes.return_value = 'E'
         opcao_escolhida = 'E'
-        escolher_opcao = escolher_uma_opcao_do_menu_entrada()
+        escolher_opcao = escolher_uma_opcao_do_menu_entrada(opcoes_do_menu_entrada)
         self.assertEqual(escolher_opcao, opcao_escolhida)
         input_opcoes.assert_has_calls([
-            call(msg, siglas_das_opcoes_menu_entrada),
+            call(msg, siglas),
         ])
 
-    @patch('src.app.input_opcoes')
+    @patch('src.util.menu_util.input_opcoes')
     def test_escolher_uma_opcao_do_menu_entrada_invalido(self, input_opcoes):
         '''
         Teste para input das opções do menu: ['E', D', 'S', 'F'] OPÇÃO-INVÁLIDA.
         python -m unittest -v tests.test_app.Test.test_escolher_uma_opcao_do_menu_entrada_invalido -v
         '''
+        opcoes_do_menu_entrada = {
+        'E': 'Extrato',
+        'D': 'Depósito',
+        'S': 'Saque', 
+        'F': 'Finalizar e sair da conta.',
+        }
+        siglas: list[str] = list(opcoes_do_menu_entrada)
         msg = 'Entre com a opção desejada: '
         opcao_escolhida = 'E'
         input_opcoes.side_effect = ['OPÇÃO INVÁLIDA', opcao_escolhida]
-        escolher_opcao = escolher_uma_opcao_do_menu_entrada()
+        escolher_opcao = escolher_uma_opcao_do_menu_entrada(opcoes_do_menu_entrada)
         self.assertEqual(escolher_opcao, opcao_escolhida)
         input_opcoes.assert_has_calls([
-            call(msg, siglas_das_opcoes_menu_entrada),
-            call(msg, siglas_das_opcoes_menu_entrada),
+            call(msg, siglas),
+            call(msg, siglas),
         ])
 
     ##################################################

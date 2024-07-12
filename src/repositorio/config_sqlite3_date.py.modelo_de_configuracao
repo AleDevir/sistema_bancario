@@ -2,6 +2,7 @@
 Note The default adapters and converters are deprecated as of Python 3.12. Instead, 
 use the Adapter and converter recipes and tailor them to your needs.
 https://docs.python.org/3/library/sqlite3.html
+ATENÇÃO: O código do presente arquivo foi inserido em __init__.py do folder repositorio.
 '''
 import datetime
 import sqlite3
