@@ -93,16 +93,16 @@ class Test(TestCase):
         Teste do metodo pode_sacar_hoje() - OPÇÃO VÁLIDA
         python -m unittest -v tests.negocio.test_transacao.Test.test_pode_sacar_hoje_valido -v
         '''
-        cliente_id = 5
-        self.assertTrue(pode_sacar_hoje(cliente_id))
+        conta_id = 5
+        self.assertTrue(pode_sacar_hoje(conta_id))
 
     def test_pode_sacar_hoje_invalido(self):
         '''
         Teste do metodo pode_sacar_hoje() - OPÇÃO INVÁLIDA
         python -m unittest -v tests.negocio.test_transacao.Test.test_pode_sacar_hoje_invalido -v
         '''
-        cliente_id = 4
-        self.assertFalse(pode_sacar_hoje(cliente_id))
+        conta_id = 4
+        self.assertFalse(pode_sacar_hoje(conta_id))
 
     def test_validar_saque_valido(self):
         '''
