@@ -52,19 +52,21 @@ def delete_rows_cliente() -> None:
     # INFRAESTRUTURA #
 #################################################
 
-def cliente_tuple_to_dict(data: tuple) -> dict[str, str | int | bytes]:
+
+def tuple_to_cliente(data: tuple) -> Cliente:
     '''
     Transforma um elemento (tuple) do banco de dados em uma estrutura de dicionário.
     Retorna o dicionário com dados da conta.
     '''
     idt, nome, sobrenome, senha, cpf =  data
-    return {
-        'id': idt,
-        'nome': nome,
-        'sobrenome': sobrenome,
-        'senha': senha,
-        'cpf': cpf
-    }
+    return Cliente.cliente(
+        idt=idt,
+        nome=nome,
+        sobrenome=sobrenome,
+        senha=senha,
+        cpf=cpf
+    )
+
 
 #################################################
     # GET - CLIENTE #
@@ -76,19 +78,16 @@ def get_cliente_by_id(cliente_id: int) -> Cliente:
     '''
     cursor.execute(f"SELECT * FROM clientes WHERE id = {cliente_id} ")
     data = cursor.fetchone()
-    data_dict = cliente_tuple_to_dict(data)
-    return cliente_from_dict(data_dict)
+    return tuple_to_cliente(data)
 
 
 def get_cliente_by_nome(cliente_nome: str) -> Cliente:
     '''
     Obter um Usuário pelo NOME.
     '''
-
     cursor.execute(f"SELECT * FROM clientes WHERE nome = '{cliente_nome}' ")
     data = cursor.fetchone()
-    data_dict = cliente_tuple_to_dict(data)
-    return cliente_from_dict(data_dict)
+    return tuple_to_cliente(data)
 
 def get_clientes() -> list[Cliente]:
     '''
@@ -98,10 +97,8 @@ def get_clientes() -> list[Cliente]:
     clientes_db = cursor.fetchall()
     result: list[Cliente] = []
     for data in clientes_db:
-        cliente_dict = cliente_tuple_to_dict(data)
-        result.append(
-            cliente_from_dict(cliente_dict)
-        )
+        cliente = tuple_to_cliente(data)
+        result.append(cliente)
     return result
 
 def senha_valida(cliente_id: int, senha: str) -> bool:

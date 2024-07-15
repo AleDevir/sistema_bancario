@@ -3,7 +3,7 @@ Model das movimentações finaceiras
 '''
 from sqlite3 import connect, Cursor
 from datetime import datetime
-from src.model.movimentacoes import Movimentacoes, movimentacao_from_dict
+from src.model.movimentacoes import Movimentacoes
 
 conexao_movimentacoes = connect('.\\src\\db\\banco_de_dados.db')
 cursor: Cursor = conexao_movimentacoes.cursor()
@@ -25,8 +25,6 @@ def criar_tabela_movimentacoes():
                     conta_id integer NOT NULL,
                     FOREIGN KEY(conta_id) REFERENCES contas(id))''')
 
-
-
 def inserir_movimentacoes(valor: float, date: datetime, conta_id: int ):
     '''
     Inseri conta na tabela.
@@ -47,18 +45,20 @@ def delete_rows_movimentacao() -> None:
     # INFRAESTRUTURA #
 #################################################
 
-def movimentacao_tuple_to_dict(data: tuple) -> dict[str, int]:
+def tuple_to_movimentacao(data: tuple) -> Movimentacoes:
     '''
     Transforma um elemento (tuple) do banco de dados em uma estrutura de dicionário.
     Retorna o dicionário com dados da conta.
     '''
-    idt, valor, date, conta_id = data
-    return {
-        'id': idt,
-        'valor': valor,
-        'date': date,
-        'conta_id': conta_id    
-    }
+    if not data:
+        return None
+    idt, valor, date, conta_id =  data
+    return Movimentacoes.movimentacao(
+        idt=idt,
+        valor=valor,
+        date=date,
+        conta_id=conta_id,
+    )
 
 #################################################
     # ADD - MOVIMENTAÇÃO #
@@ -85,8 +85,7 @@ def get_movimentacoes_financeiras() -> list[Movimentacoes]:
     movimentacoes_db = cursor.fetchall()
     result: list[Movimentacoes] = []
     for data in movimentacoes_db:
-        mov_dict = movimentacao_tuple_to_dict(data)
-        mov = movimentacao_from_dict(mov_dict)
+        mov = tuple_to_movimentacao(data)
         if mov:
             result.append(mov)
     return result
@@ -100,8 +99,7 @@ def get_movimentacao_financeira_do_cliente(conta_id: int) -> list[Movimentacoes]
     movimentacoes_db = cursor.fetchall()
     result: list[Movimentacoes] = []
     for data in movimentacoes_db:
-        mov_dict = movimentacao_tuple_to_dict(data)
-        mov = movimentacao_from_dict(mov_dict)
+        mov = tuple_to_movimentacao(data)
         if mov:
             result.append(mov)
     return result

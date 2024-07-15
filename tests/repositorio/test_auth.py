@@ -26,8 +26,7 @@ def test_auth_error():
     Teste do metodo get_auth
     pytest tests/repositorio/test_auth.py::test_auth_error -vv
     '''
-    
-    
+
     senha = '123'
     conta_numero = 8577777
     erro = f"Não foi possível obter a conta de número {conta_numero}!"

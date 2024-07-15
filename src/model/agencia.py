@@ -1,7 +1,7 @@
 '''
 model Agencia()
 '''
-
+from typing import Self
 from src.model.base_model import BaseModel
 
 class Agencia(BaseModel):
@@ -22,13 +22,17 @@ class Agencia(BaseModel):
         self.numero: int = numero
         self.digito: int = digito
 
+    @classmethod
+    def agencia(
+         # pylint: disable=too-many-arguments
+        cls,
+        *,
+        idt: int,
+        numero: int,
+        digito: int
 
-def agencia_from_dict(data: dict[str, int]) -> Agencia:
-    '''
-    Recebe os dados e retorna Agencia(id, numero e digito)
-    '''
-    return Agencia(
-        idt=data.get('id', 0),
-        numero=data.get('numero', 0),
-        digito=data.get('digito', 0),
-    )
+        ) -> Self:
+        '''
+        Recebe os dados e retorna Agencia(id, numero, digito)
+        '''
+        return cls(idt, numero, digito)

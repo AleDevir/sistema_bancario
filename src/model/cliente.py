@@ -27,6 +27,22 @@ class Cliente(BaseModel):
         self.senha: str = senha
         self.cpf: int = cpf
 
+    @classmethod
+    def cliente(
+         # pylint: disable=too-many-arguments
+        cls,
+        *,
+        nome: str,
+        sobrenome: str,
+        idt: int,
+        senha: str,
+        cpf: str
+        ) -> dict[str, str | int | bytes ]:
+        '''
+        Recebe os dados e retorna o Cliente(id, nome, sobrenome, cpf, senha)
+        '''
+        return cls(nome, sobrenome, idt, senha, cpf)
+
 def cliente_from_dict(data: dict[str, str | int | bytes ]) -> Cliente:
     '''
     Recebe os dados e retorna o Cliente(id, nome, sobrenome, cpf, senha)

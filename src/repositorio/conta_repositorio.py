@@ -6,7 +6,7 @@ Model Conta
 
 from sqlite3 import connect, Cursor
 from typing import Optional
-from src.model.conta import Conta, conta_from_dict
+from src.model.conta import Conta
 
 conexao_conta = connect('.\\src\\db\\banco_de_dados.db')
 cursor: Cursor = conexao_conta.cursor()
@@ -31,8 +31,6 @@ def criar_tabela_contas():
                     cliente_id integer NOT NULL,
                     FOREIGN KEY(cliente_id) REFERENCES clientes(id))''')
 
-
-
 def inserir_conta(numero: int, digito: int, tipo: int, agencia_id: int, cliente_id: int, ):
     '''
     Inseri conta na tabela.
@@ -52,22 +50,23 @@ def delete_rows_conta() -> None:
     # INFRAESTRUTURA #
 #################################################
 
-def conta_tuple_to_dict(data: tuple) -> dict[str, int]:
+
+def tuple_to_conta(data: tuple) -> Optional[Conta]:
     '''
     Transforma um elemento (tuple) do banco de dados em uma estrutura de dicionário.
     Retorna o dicionário com dados da conta.
     '''
     if not data:
-        return {}
+        return None
     idt, numero, digito, tipo, agencia_id, cliente_id =  data
-    return {
-        'id': idt,
-        'numero': numero,
-        'digito': digito,
-        'tipo': tipo,
-        'agencia_id': agencia_id,
-        'cliente_id': cliente_id,
-    }
+    return Conta.conta(
+        idt=idt,
+        numero=numero,
+        digito=digito,
+        tipo=tipo,
+        agencia_id=agencia_id,
+        cliente_id=cliente_id
+    )
 
 #################################################
     # GET - CONTA #
@@ -79,8 +78,7 @@ def get_conta_by_id(conta_id: int) -> Optional[Conta]:
     '''
     cursor.execute(f"SELECT * FROM contas WHERE id = {conta_id} ")
     data = cursor.fetchone()
-    data_dict = conta_tuple_to_dict(data)
-    return conta_from_dict(data_dict)
+    return tuple_to_conta(data)
 
 def get_conta_by_numero(conta_numero: int) -> Optional[Conta]:
     '''
@@ -88,8 +86,8 @@ def get_conta_by_numero(conta_numero: int) -> Optional[Conta]:
     '''
     cursor.execute(f"SELECT * FROM contas WHERE numero = {conta_numero} ")
     data = cursor.fetchone()
-    data_dict = conta_tuple_to_dict(data)
-    return conta_from_dict(data_dict)
+    return tuple_to_conta(data)
+
 
 def get_contas() -> list[Conta]:
     '''
@@ -99,8 +97,7 @@ def get_contas() -> list[Conta]:
     contas_db = cursor.fetchall()
     result: list[Conta] = []
     for data in contas_db:
-        conta_dict = conta_tuple_to_dict(data)
-        conta = conta_from_dict(conta_dict)
+        conta = tuple_to_conta(data)
         if conta:
             result.append(conta)
     return result
@@ -114,8 +111,7 @@ def get_contas_do_cliente(cliente_id: int) -> list[Conta]:
 
     result: list[Conta] = []
     for data in contas_db:
-        conta_dict = conta_tuple_to_dict(data)
-        result.append(
-            conta_from_dict(conta_dict)  # type: ignore[arg-type]
-        )
+        conta = tuple_to_conta(data)
+        if conta:
+            result.append(conta)
     return result
