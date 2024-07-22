@@ -41,11 +41,11 @@ def carregar_banco_de_dados() -> None:
 
     # Cliente
     senha_hash = bcrypt.hashpw('123'.encode(), bcrypt.gensalt())
-    inserir_cliente('rinaldo', 'benevides', senha_hash, 45559920088)
-    inserir_cliente('alessandra', 'guimarães', senha_hash, 95282507005)
-    inserir_cliente('test', 'test', senha_hash, 87315683003)
-    inserir_cliente('test', 'test', senha_hash, 23447087072)
-    inserir_cliente('test', 'test', senha_hash, 82160212083)
+    inserir_cliente('rinaldo', 'benevides', senha_hash, 11111111111)
+    inserir_cliente('alessandra', 'guimarães', senha_hash, 22222222222)
+    inserir_cliente('test', 'test', senha_hash, 33333333333)
+    inserir_cliente('test', 'test', senha_hash, 44444444444)
+    inserir_cliente('test', 'test', senha_hash, 55555555555)
 
     # Agência
     inserir_agencia(111, 1)

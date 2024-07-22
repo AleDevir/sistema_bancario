@@ -21,10 +21,14 @@ class Test(TestCase):
     Classe de teste para inputs.
     '''
 
-    ################################################
+################################################
      # TESTES DO FLUXO PRINCIPAL -> app_adm #
-    ################################################
+################################################
 
+
+    #########################################################
+                               #CLIENTE#
+    #########################################################
     @patch('src.app_adm.escolher_uma_opcao_do_menu_entrada')
     def test_app_adm_opcao_de_entrada( # pylint: disable=too-many-arguments
         self,
@@ -35,9 +39,9 @@ class Test(TestCase):
         python -m unittest -v tests.test_app_adm.Test.test_app_adm_opcao_de_entrada -v
         '''
         escolher_uma_opcao_do_menu_entrada_mock.side_effect = [
-            'C', 'SA'
+            'CB', 'SA'
         ]
-        carregar_banco_de_dados()  
+        carregar_banco_de_dados()
         admin()
 
     @patch('src.app_adm.get_input')
@@ -71,6 +75,29 @@ class Test(TestCase):
             call('Senha: ')
         ])
 
+    @patch('src.app_adm.get_input')
+    @patch('src.app_adm.get_cliente_by_cpf')
+    @patch('src.app_adm.escolher_uma_opcao_do_menu_entrada')
+    def test_app_adm_menu_cl_c( # pylint: disable=too-many-arguments
+        self,
+        escolher_uma_opcao_do_menu_entrada_mock,
+        get_cliente_by_cpf_mock,
+        get_input,
+        ):
+        '''
+        Teste do fluxo principal - admin() 
+        python -m unittest -v tests.test_app_adm.Test.test_app_adm_menu_cl_c -v
+        '''
+        escolher_uma_opcao_do_menu_entrada_mock.side_effect = [
+            'CL', 'C', 'SA'
+        ]
+        get_input.side_effect =  '22222222222'
+        get_cliente_by_cpf_mock.return_value = None
+        admin()
+        get_input.assert_has_calls(
+            call("Insira o CPF: ")
+        )
+      
     @patch('src.app_adm.inserir_cliente')
     @patch('src.app_adm.escolher_uma_opcao_do_menu_entrada')
     def test_app_adm_menu_cl_d( # pylint: disable=too-many-arguments
@@ -124,6 +151,9 @@ class Test(TestCase):
         inserir_cliente_mock.return_value = None
         admin()
 
+    #########################################################
+                           #CONTAE#
+    #########################################################
 
     @patch('src.app_adm.input_int')
     @patch('src.app_adm.inserir_conta')
@@ -154,12 +184,37 @@ class Test(TestCase):
         ])
 
 
-    @patch('src.app_adm.inserir_conta')
+    @patch('src.app_adm.input_int')
+    @patch('src.app_adm.get_conta_by_numero')
+    @patch('src.app_adm.escolher_uma_opcao_do_menu_entrada')
+    def test_app_adm_menu_co_c( # pylint: disable=too-many-arguments
+        self,
+        escolher_uma_opcao_do_menu_entrada_mock,
+        get_conta_by_numero_mock,
+        input_int,
+        ):
+        '''
+        Teste do fluxo principal - admin() 
+        python -m unittest -v tests.test_app_adm.Test.test_app_adm_menu_co_c -v
+        '''
+        escolher_uma_opcao_do_menu_entrada_mock.side_effect = [
+            'CO', 'C', 'SA'
+        ]
+        input_int.side_effect =  2222
+        get_conta_by_numero_mock.return_value = None
+        admin()
+        input_int.assert_has_calls(
+            call("Insira o número da conta: ")
+        )
+
+    @patch('src.app_adm.input_int')
+    @patch('src.app_adm.delete_conta')
     @patch('src.app_adm.escolher_uma_opcao_do_menu_entrada')
     def test_app_adm_menu_co_d( # pylint: disable=too-many-arguments
         self,
         escolher_uma_opcao_do_menu_entrada_mock,
-        inserir_conta_mock
+        delete_conta_mock,
+        input_int,
     ):
         '''
         Teste do fluxo principal - admin() 
@@ -168,15 +223,20 @@ class Test(TestCase):
         escolher_uma_opcao_do_menu_entrada_mock.side_effect = [
             'CO', 'D', 'SA'
         ]
-        inserir_conta_mock.return_value = None
+
+        input_int.side_effect =  9999
+        delete_conta_mock.return_value = None
         admin()
+ 
     
-    @patch('src.app_adm.inserir_conta')
+    @patch('src.app_adm.input_int')
+    @patch('src.app_adm.update_conta')
     @patch('src.app_adm.escolher_uma_opcao_do_menu_entrada')
     def test_app_adm_menu_co_u( # pylint: disable=too-many-arguments
         self,
         escolher_uma_opcao_do_menu_entrada_mock,
-        inserir_conta_mock
+        update_conta_mock,
+        input_int,
     ):
         '''
         Teste do fluxo principal - admin() 
@@ -185,8 +245,16 @@ class Test(TestCase):
         escolher_uma_opcao_do_menu_entrada_mock.side_effect = [
             'CO', 'U', 'SA'
         ]
-        inserir_conta_mock.return_value = None
+        input_int.side_effect =  9999
+        update_conta_mock.return_value = None
         admin()
+        input_int.assert_has_calls([
+            call('Numero da conta: '),
+            call('Digito: '),
+            call('Tipo (1: conta-corrente | 2: poupança): '),
+            call('Agencia_id: '),
+            call('Cliente_id: ')
+        ])
 
     @patch('src.app_adm.inserir_conta')
     @patch('src.app_adm.escolher_uma_opcao_do_menu_entrada')
@@ -205,6 +273,9 @@ class Test(TestCase):
         inserir_conta_mock.return_value = None
         admin()
 
+  #########################################################
+                        #AGÊNCIA#
+    #########################################################
     @patch('src.app_adm.input_int')
     @patch('src.app_adm.inserir_agencia')
     @patch('src.app_adm.escolher_uma_opcao_do_menu_entrada')

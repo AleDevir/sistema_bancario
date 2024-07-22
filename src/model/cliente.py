@@ -16,7 +16,7 @@ class Cliente(BaseModel):
         sobrenome: str,
         idt: int,
         senha: str,
-        cpf: int
+        cpf: str
     ) -> None:
         '''
         Inicialização da classe Cliente
@@ -25,16 +25,20 @@ class Cliente(BaseModel):
         self.nome: str = nome
         self.sobrenome: str = sobrenome
         self.senha: str = senha
-        self.cpf: int = cpf
+        self.cpf: str = cpf
 
-def cliente_from_dict(data: dict[str, str | int | bytes ]) -> Cliente:
-    '''
-    Recebe os dados e retorna o Cliente(id, nome, sobrenome, cpf, senha)
-    '''
-    return Cliente(
-        nome=data.get('nome', ''), # type: ignore[arg-type]
-        sobrenome=data.get('sobrenome', ''), # type: ignore[arg-type]
-        idt=data.get('id', 0), # type: ignore[arg-type]
-        senha=data.get('senha', '123'), # type: ignore[arg-type]
-        cpf=data.get('cpf', 0) # type: ignore[arg-type]
-    )
+    @classmethod
+    def cliente(
+         # pylint: disable=too-many-arguments
+        cls,
+        *,
+        nome: str,
+        sobrenome: str,
+        idt: int,
+        senha: str,
+        cpf: str
+        ) -> dict[str, str | int | bytes ]:
+        '''
+        Recebe os dados e retorna o Cliente(id, nome, sobrenome, cpf, senha)
+        '''
+        return cls(nome, sobrenome, idt, senha, cpf)

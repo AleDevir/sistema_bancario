@@ -27,15 +27,13 @@ def test_calcular_saldo_das_movimentacoes():
             idt=1,
             valor=500,
             date=datetime(1900, 1, 1, 00, 00, 00),
-            conta_id=2,
-            cliente_id=3,
+            conta_id=2
         ),
         Movimentacoes(
             idt=2,
             valor=330.90,
             date=datetime(1900, 1, 2, 00, 00, 00),
-            conta_id=2,
-            cliente_id=3,
+            conta_id=2
         )
     ]
     saldo = calcular_saldo_das_movimentacoes(movimentacoes)

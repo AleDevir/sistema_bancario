@@ -3,7 +3,7 @@ Repositório cliente
 '''
 from sqlite3 import connect, Cursor
 import bcrypt
-from src.model.cliente import Cliente, cliente_from_dict
+from src.model.cliente import Cliente
 
 conexao_cliente = connect('.\\src\\db\\banco_de_dados.db') # pylint: disable=line-too-long
 cursor: Cursor = conexao_cliente.cursor()
@@ -25,46 +25,40 @@ def criar_tabela_clientes()-> None:
                     senha text  NOT NULL,
                     cpf text UNIQUE NOT NULL)''')
 
-def inserir_cliente(nome: str, sobrenome: str, senha_hash: str, cpf: str) -> None:
-    '''
-    Inseri cliente na tabela.
-    '''
-    dados =  (nome, sobrenome, senha_hash, cpf)
-    cursor.execute('INSERT INTO clientes(nome, sobrenome, senha, cpf) VALUES(?, ?, ?, ?)', dados)
-    conexao_cliente.commit()
-
-# def atualizar_cliente(cursor: Cursor, nome: str, cliente_id: int):
-#     cursor.execute(f"UPDATE clientes SET nome = '{nome}' WHERE id = {cliente_id}")
-#     conexao_cliente.commit()
-
-# def deletar_cliente(cursor: Cursor, id: int):
-#     cursor.execute(f"DELETE FROM clientes WHERE id={id}")
-#     conexao_cliente.commit()
-
-def delete_rows_cliente() -> None:
-    '''
-    Deleta as linhas da tabela.
-    '''
-    cursor.execute("DELETE FROM clientes")
-    conexao_cliente.commit()
 
 #################################################
     # INFRAESTRUTURA #
 #################################################
 
-def cliente_tuple_to_dict(data: tuple) -> dict[str, str | int | bytes]:
+
+def tuple_to_cliente(data: tuple) -> Cliente:
     '''
     Transforma um elemento (tuple) do banco de dados em uma estrutura de dicionário.
     Retorna o dicionário com dados da conta.
     '''
     idt, nome, sobrenome, senha, cpf =  data
-    return {
-        'id': idt,
-        'nome': nome,
-        'sobrenome': sobrenome,
-        'senha': senha,
-        'cpf': cpf
-    }
+    return Cliente.cliente(
+        idt=idt,
+        nome=nome,
+        sobrenome=sobrenome,
+        senha=senha,
+        cpf=cpf
+    )
+
+
+#################################################
+    # CRIAR - CLIENTE #
+#################################################
+
+def inserir_cliente(nome: str, sobrenome: str, senha_hash: str, cpf: str) -> None:
+    '''
+    Inseri cliente na tabela.
+    '''
+    dados =  (nome, sobrenome, senha_hash, cpf)
+    # cursor.execute('INSERT INTO clientes(nome, sobrenome, senha, cpf) VALUES(?, ?, ?, ?)', dados) # pylint: disable=line-too-long
+    cursor.execute('INSERT INTO clientes(nome, sobrenome, senha, cpf) VALUES(?, ?, ?, ?)', dados) # pylint: disable=line-too-long
+    conexao_cliente.commit()
+
 
 #################################################
     # GET - CLIENTE #
@@ -76,19 +70,25 @@ def get_cliente_by_id(cliente_id: int) -> Cliente:
     '''
     cursor.execute(f"SELECT * FROM clientes WHERE id = {cliente_id} ")
     data = cursor.fetchone()
-    data_dict = cliente_tuple_to_dict(data)
-    return cliente_from_dict(data_dict)
-
+    return tuple_to_cliente(data)
 
 def get_cliente_by_nome(cliente_nome: str) -> Cliente:
     '''
     Obter um Usuário pelo NOME.
     '''
-
     cursor.execute(f"SELECT * FROM clientes WHERE nome = '{cliente_nome}' ")
     data = cursor.fetchone()
-    data_dict = cliente_tuple_to_dict(data)
-    return cliente_from_dict(data_dict)
+    return tuple_to_cliente(data)
+
+def get_cliente_by_cpf(cliente_cpf: str) -> Cliente | None:
+    '''
+    Obter um Usuário pelo CPF.
+    '''
+    cursor.execute(f"SELECT * FROM clientes WHERE cpf = '{cliente_cpf}' ")
+    data = cursor.fetchone()
+    if not data:
+        return None
+    return tuple_to_cliente(data)
 
 def get_clientes() -> list[Cliente]:
     '''
@@ -98,11 +98,24 @@ def get_clientes() -> list[Cliente]:
     clientes_db = cursor.fetchall()
     result: list[Cliente] = []
     for data in clientes_db:
-        cliente_dict = cliente_tuple_to_dict(data)
-        result.append(
-            cliente_from_dict(cliente_dict)
-        )
+        cliente = tuple_to_cliente(data)
+        result.append(cliente)
     return result
+
+#################################################
+    # UPDATE - CLIENTE #
+#################################################
+
+def update_cliente(nome: str, sobrenome: str, cliente_cpf: str, cliente_id: int) -> None:
+    '''
+    Atualiza dados do cliente na tabela.
+    '''
+    cursor.execute("UPDATE clientes SET nome = ?, sobrenome = ?, cpf = ? WHERE id = ?", (nome, sobrenome, cliente_cpf, cliente_id)) # pylint: disable=line-too-long
+    conexao_cliente.commit()
+
+#################################################
+    # SENHA - CLIENTE #
+#################################################
 
 def senha_valida(cliente_id: int, senha: str) -> bool:
     '''
@@ -114,3 +127,14 @@ def senha_valida(cliente_id: int, senha: str) -> bool:
         return False
 
     return bcrypt.checkpw(senha.encode(), cliente.senha) # type: ignore[arg-type]
+
+
+#################################################
+    # DELETE - CLIENTE #
+#################################################
+def delete_cliente(idt: int):
+    '''
+    Deleta um cliente de id informado.
+    '''
+    cursor.execute("DELETE FROM clientes WHERE id= ?", (str(idt)))
+    conexao_cliente.commit()

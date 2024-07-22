@@ -1,6 +1,7 @@
 '''
 model Transacoes()
 '''
+from typing import Self
 from datetime import datetime
 from src.model.base_model import BaseModel
 from src.util.data_e_hora_util import (
@@ -18,7 +19,6 @@ class Movimentacoes(BaseModel):
         idt: int,
         valor: float,
         date: datetime,
-        cliente_id: int,
         conta_id: int
     ) -> None:
         '''
@@ -27,20 +27,21 @@ class Movimentacoes(BaseModel):
         super().__init__(idt)
         self.valor: float = valor
         self.date: datetime = date
-        self.cliente_id:  int = cliente_id
         self.conta_id: int = conta_id
 
-def movimentacao_from_dict(data: dict[str, str | datetime | float]) -> Movimentacoes:
-    '''
-    Recebe os dados e retorna Conta(id, numero, tipo, agencia_id, usuario_id e digito)
-    '''
-    data_informada = data.get('date')
-    data_hora = converter_timestamp_to_datetime(data_informada) # type: ignore[arg-type]
-    mov =  Movimentacoes(
-        idt=data.get('id', 0),  # type: ignore[arg-type]
-        valor=data.get('valor', 0),  # type: ignore[arg-type]
-        date=data_hora,
-        conta_id=data.get('conta_id', 0),  # type: ignore[arg-type]
-        cliente_id=data.get('cliente_id', 0),  # type: ignore[arg-type]
-    )
-    return mov
+    @classmethod
+    def movimentacao(
+         # pylint: disable=too-many-arguments
+        cls,
+        *,
+        idt: int,
+        valor: float,
+        date: int,
+        conta_id: int,
+
+        ) -> Self:
+        '''
+        Recebe os dados e retorna Movimentacao(id, valor, date, conta-id)
+        '''
+        data_hora = converter_timestamp_to_datetime(date)
+        return cls(idt, valor, data_hora, conta_id)
