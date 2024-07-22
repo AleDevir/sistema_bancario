@@ -45,4 +45,3 @@ class Movimentacoes(BaseModel):
         '''
         data_hora = converter_timestamp_to_datetime(date)
         return cls(idt, valor, data_hora, conta_id)
-

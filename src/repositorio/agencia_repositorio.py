@@ -23,21 +23,6 @@ def criar_tabela_agencias():
                     numero integer NOT NULL,
                     digito integer NOT NULL)''')
 
-def inserir_agencia(numero: int, digito: int ):
-    '''
-    Inseri agencia na tabela.
-    '''
-    dados =  (numero, digito)
-    cursor.execute('INSERT INTO agencias(numero, digito) VALUES(?, ?)', dados) # pylint: disable=line-too-long
-    conexao_agencia.commit()
-
-def delete_rows_agencia() -> None:
-    '''
-    Deleta as linhas da tabela.
-    '''
-    cursor.execute("DELETE FROM agencias")
-    conexao_agencia.commit()
-
 #################################################
     # INFRAESTRUTURA #
 #################################################
@@ -55,6 +40,18 @@ def tuple_to_agencia(data: tuple) -> Agencia:
         numero=numero,
         digito=digito
     )
+
+
+#################################################
+    # CRIAR - AGÊNCIA #
+#################################################
+def inserir_agencia(numero: int, digito: int ):
+    '''
+    Inseri agencia na tabela.
+    '''
+    dados =  (numero, digito)
+    cursor.execute('INSERT INTO agencias(numero, digito) VALUES(?, ?)', dados) # pylint: disable=line-too-long
+    conexao_agencia.commit()
 
 #################################################
     # GET - AGENCIA #
@@ -86,3 +83,26 @@ def get_agencias() -> list[Agencia]:
         agencia = tuple_to_agencia(data)
         result.append(agencia)
     return result
+
+
+#################################################
+    # UPADATE - AGÊNCIA #
+#################################################
+
+def update_agencia(numero: int, digito: int, idt: int) -> None:
+    '''
+    Atualiza dados da agência na tabela.
+    '''
+    cursor.execute("UPDATE agencias SET numero = ?, digito = ?  WHERE id = ?", (numero, digito, idt)) # pylint: disable=line-too-long
+    conexao_agencia.commit()
+
+#################################################
+    # DELETE - AGÊNCIA #
+#################################################
+
+def delete_agencia(idt: int):
+    '''
+    Deleta uma agência de id informado.
+    '''
+    cursor.execute("DELETE FROM contas WHERE id= ?", (str(idt)))
+    conexao_agencia.commit()

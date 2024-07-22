@@ -31,21 +31,6 @@ def criar_tabela_contas():
                     cliente_id integer NOT NULL,
                     FOREIGN KEY(cliente_id) REFERENCES clientes(id))''')
 
-def inserir_conta(numero: int, digito: int, tipo: int, agencia_id: int, cliente_id: int, ):
-    '''
-    Inseri conta na tabela.
-    '''
-    dados =  (numero, digito, tipo, agencia_id, cliente_id)
-    cursor.execute('INSERT INTO contas(numero, digito, tipo, agencia_id, cliente_id) VALUES(?, ?,  ?, ?, ?)', dados) # pylint: disable=line-too-long
-    conexao_conta.commit()
-
-def delete_rows_conta() -> None:
-    '''
-    Deleta as linhas da tabela.
-    '''
-    cursor.execute("DELETE FROM contas")
-    conexao_conta.commit()
-
 #################################################
     # INFRAESTRUTURA #
 #################################################
@@ -68,6 +53,18 @@ def tuple_to_conta(data: tuple) -> Optional[Conta]:
         cliente_id=cliente_id
     )
 
+
+#################################################
+    # CRIAR - CONTA #
+#################################################
+def inserir_conta(numero: int, digito: int, tipo: int, agencia_id: int, cliente_id: int ):
+    '''
+    Inseri conta na tabela.
+    '''
+    dados =  (numero, digito, tipo, agencia_id, cliente_id)
+    cursor.execute('INSERT INTO contas(numero, digito, tipo, agencia_id, cliente_id) VALUES(?, ?,  ?, ?, ?)', dados) # pylint: disable=line-too-long
+    conexao_conta.commit()
+
 #################################################
     # GET - CONTA #
 #################################################
@@ -87,7 +84,6 @@ def get_conta_by_numero(conta_numero: int) -> Optional[Conta]:
     cursor.execute(f"SELECT * FROM contas WHERE numero = {conta_numero} ")
     data = cursor.fetchone()
     return tuple_to_conta(data)
-
 
 def get_contas() -> list[Conta]:
     '''
@@ -115,3 +111,33 @@ def get_contas_do_cliente(cliente_id: int) -> list[Conta]:
         if conta:
             result.append(conta)
     return result
+
+
+#################################################
+    # UPDATE - CONTA #
+#################################################
+
+def update_conta(
+        # pylint: disable=too-many-arguments
+        numero: int,
+        digito: int,
+        tipo: int,
+        agencia_id: int,
+        cliente_id: int,
+        idt: int
+) -> None:
+    '''
+    Atualiza dados da conta na tabela.
+    '''
+    cursor.execute("UPDATE contas SET numero = ?, digito = ?, tipo = ?, agencia_id = ?, cliente_id = ?  WHERE id = ?", (numero, digito, tipo, agencia_id, cliente_id, idt)) # pylint: disable=line-too-long
+    conexao_conta.commit()
+
+#################################################
+    # DELETAR - CONTA #
+#################################################
+def delete_conta(idt: int):
+    '''
+    Deleta uma conta de id informado.
+    '''
+    cursor.execute("DELETE FROM contas WHERE id= ?", (str(idt)))
+    conexao_conta.commit()
