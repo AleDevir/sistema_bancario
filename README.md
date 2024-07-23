@@ -1,4 +1,4 @@
-# ${\color {#b3903f} Sistema \ Bancário}$  
+
 <img src="https://cdn-icons-png.flaticon.com/512/1052/1052854.png" width='40'/>  Repositório desenvolvido com Python 3.12 para fins de aprendizado, contendo estrutura de testes e checagem estática de código utilizando Pytest e Mypy.
 ## [![Sistema Bancario](https://img.shields.io/badge/Sistema_Bancario-gold)](https://github.com/AleDevir/sistema_bancario)
 
