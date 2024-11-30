@@ -16,24 +16,11 @@
 ### Diagrama Entidade Relacionamento (DER)
 ![DER](https://github.com/AleDevir/operacoes_bancarias_basicas/blob/main/img/der.png)
 
- ### Instalações:
+Comando para instalação dos pacotes:
 ```
-# Para verificar a qualidade de código fonte.
-pip install pylint --user
-
-# Para verificar os tipos estáticos. 
-pip install mypy --user
-
-# Para testes parametrizados, acessórios e reescrita assertiva.
-pip install pytest --user
-
-# Para criptografia do tipo hash para senhas.
-pip install bcrypt
-
-#Para total de cobertura de testes.
-pip install pytest-cov
-
+pip install -r requirements.txt
 ```
+
 #### Download - Visualização sqlite
 [![DB4S 3.12.2](https://img.shields.io/badge/DB4S-blue)](https://www.python.org/downloads/)
 
