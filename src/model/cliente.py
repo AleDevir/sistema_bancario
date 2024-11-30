@@ -1,7 +1,7 @@
 '''
 model Cliente() 
 '''
-
+from typing import Self
 from src.model.base_model import BaseModel
 
 class Cliente(BaseModel):
@@ -37,7 +37,7 @@ class Cliente(BaseModel):
         idt: int,
         senha: str,
         cpf: str
-        ) -> dict[str, str | int | bytes ]:
+        ) -> Self:
         '''
         Recebe os dados e retorna o Cliente(id, nome, sobrenome, cpf, senha)
         '''

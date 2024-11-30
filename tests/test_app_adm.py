@@ -7,7 +7,9 @@ pytest tests/test_app_adm.py -vv
 from unittest.mock import patch, call
 from unittest import TestCase
 
-
+from src.model.cliente import Cliente
+from src.model.conta import Conta
+from src.model.agencia import Agencia
 
 from src.app_adm import (
     admin,
@@ -80,30 +82,39 @@ class Test(TestCase):
     @patch('src.app_adm.escolher_uma_opcao_do_menu_entrada')
     def test_app_adm_menu_cl_c( # pylint: disable=too-many-arguments
         self,
-        escolher_uma_opcao_do_menu_entrada_mock,
-        get_cliente_by_cpf_mock,
+        escolher_uma_opcao_do_menu_entrada,
+        get_cliente_by_cpf,
         get_input,
         ):
         '''
         Teste do fluxo principal - admin() 
         python -m unittest -v tests.test_app_adm.Test.test_app_adm_menu_cl_c -v
         '''
-        escolher_uma_opcao_do_menu_entrada_mock.side_effect = [
+        escolher_uma_opcao_do_menu_entrada.side_effect = [
             'CL', 'C', 'SA'
         ]
-        get_input.side_effect =  '22222222222'
-        get_cliente_by_cpf_mock.return_value = None
-        admin()
-        get_input.assert_has_calls(
-            call("Insira o CPF: ")
+        get_input.return_value = '22222222222'
+        get_cliente_by_cpf.return_value = Cliente.cliente(
+            nome='alessandra',
+            sobrenome='Guimarães',
+            idt=2,
+            senha='123',
+            cpf='22222222222'
         )
-      
-    @patch('src.app_adm.inserir_cliente')
+        admin()
+        get_input.assert_has_calls([
+            call("Insira o CPF: ")
+        ])
+
+
+    @patch('src.app_adm.get_input')
+    @patch('src.app_adm.get_cliente_by_cpf')
     @patch('src.app_adm.escolher_uma_opcao_do_menu_entrada')
     def test_app_adm_menu_cl_d( # pylint: disable=too-many-arguments
         self,
         escolher_uma_opcao_do_menu_entrada_mock,
-        inserir_cliente_mock
+        get_cliente_by_cpf,
+         get_input,
     ):
         '''
         Teste do fluxo principal - admin() 
@@ -112,16 +123,27 @@ class Test(TestCase):
         escolher_uma_opcao_do_menu_entrada_mock.side_effect = [
             'CL', 'D', 'SA',
         ]
-        inserir_cliente_mock.return_value = None
+        get_input.return_value = '66666666666'
+        get_cliente_by_cpf.return_value = Cliente.cliente(
+            nome='teste_delete',
+            sobrenome='teste_delete',
+            idt=6,
+            senha='123',
+            cpf='66666666666'
+        )
         admin()
+        get_input.assert_has_calls([
+            call("Insira o CPF: ")
+        ])
 
-
-    @patch('src.app_adm.inserir_cliente')
+    @patch('src.app_adm.get_input')
+    @patch('src.app_adm.update_cliente')
     @patch('src.app_adm.escolher_uma_opcao_do_menu_entrada')
     def test_app_adm_menu_cl_u( # pylint: disable=too-many-arguments
         self,
         escolher_uma_opcao_do_menu_entrada_mock,
-        inserir_cliente_mock
+        update_cliente_mock,
+        get_input,
     ):
         '''
         Teste do fluxo principal - admin() 
@@ -130,9 +152,18 @@ class Test(TestCase):
         escolher_uma_opcao_do_menu_entrada_mock.side_effect = [
             'CL', 'U', 'SA',
         ]
-        inserir_cliente_mock.return_value = None
+        get_input.return_value = '22222222222'
+        update_cliente_mock.return_value = Cliente.cliente(
+            nome='ale',
+            sobrenome='Gui',
+            idt=2,
+            senha='123',
+            cpf='22222222222'
+        )
         admin()
-
+        get_input.assert_has_calls([
+            call("Insira o CPF: ")
+        ])
 
     @patch('src.app_adm.inserir_cliente')
     @patch('src.app_adm.escolher_uma_opcao_do_menu_entrada')
@@ -152,7 +183,7 @@ class Test(TestCase):
         admin()
 
     #########################################################
-                           #CONTAE#
+                           #CONTA#
     #########################################################
 
     @patch('src.app_adm.input_int')
@@ -182,7 +213,6 @@ class Test(TestCase):
             call('Agencia_id: '),
             call('Cliente_id: ')
         ])
-
 
     @patch('src.app_adm.input_int')
     @patch('src.app_adm.get_conta_by_numero')
@@ -225,10 +255,19 @@ class Test(TestCase):
         ]
 
         input_int.side_effect =  9999
-        delete_conta_mock.return_value = None
+        delete_conta_mock.return_value = Conta.conta(
+            idt=8,
+            numero=8888,
+            digito= 88,
+            tipo=2,
+            agencia_id=4,
+            cliente_id=6
+    )
         admin()
- 
-    
+        input_int.assert_has_calls([
+            call("Insira o número da conta: ")
+        ])
+
     @patch('src.app_adm.input_int')
     @patch('src.app_adm.update_conta')
     @patch('src.app_adm.escolher_uma_opcao_do_menu_entrada')
@@ -245,16 +284,21 @@ class Test(TestCase):
         escolher_uma_opcao_do_menu_entrada_mock.side_effect = [
             'CO', 'U', 'SA'
         ]
-        input_int.side_effect =  9999
-        update_conta_mock.return_value = None
+       
+        input_int.side_effect =  [9999, 99, 2, 2, 9]
+        update_conta_mock.return_value = Conta.conta(
+            idt=8,
+            numero=8888,
+            digito= 88,
+            tipo=2,
+            agencia_id=4,
+            cliente_id=6
+    )
         admin()
         input_int.assert_has_calls([
-            call('Numero da conta: '),
-            call('Digito: '),
-            call('Tipo (1: conta-corrente | 2: poupança): '),
-            call('Agencia_id: '),
-            call('Cliente_id: ')
+            call("Insira o número da conta: ")
         ])
+
 
     @patch('src.app_adm.inserir_conta')
     @patch('src.app_adm.escolher_uma_opcao_do_menu_entrada')
