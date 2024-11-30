@@ -46,11 +46,13 @@ def carregar_banco_de_dados() -> None:
     inserir_cliente('test', 'test', senha_hash, 33333333333)
     inserir_cliente('test', 'test', senha_hash, 44444444444)
     inserir_cliente('test', 'test', senha_hash, 55555555555)
+    inserir_cliente('teste_delete', 'teste_delete', senha_hash, 66666666666)
 
     # Agência
     inserir_agencia(111, 1)
     inserir_agencia(222, 2)
     inserir_agencia(333, 3)
+    inserir_agencia(444, 4)
 
     # Conta
     inserir_conta(1111, 11, 1, 1, 1)
@@ -60,6 +62,7 @@ def carregar_banco_de_dados() -> None:
     inserir_conta(5555, 55, 2, 2, 4)
     inserir_conta(6666, 66, 2, 3, 5)
     inserir_conta(7777, 77, 2, 1, 2)
+    inserir_conta(8888, 88, 2, 4, 6)
 
     agora = datetime.now()
     data_hora = datetime(agora.year, agora.month, agora.day, agora.hour, agora.minute, agora.second)

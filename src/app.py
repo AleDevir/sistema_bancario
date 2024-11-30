@@ -1,12 +1,11 @@
 '''
-A princípio TUDO da main vem pra cá.
-
-O def main será renomeado para caixa_eletronico
+Aplicação do sistema bancário
 '''
 
 import getpass
 from datetime import datetime
 from typing import Final
+import locale
 from src.util.console_util import (
     verde,
     vermelho,
@@ -61,11 +60,21 @@ def timestamp(funcao):
         # Pegar cliente_id tanto argumento posicional como argumento nomeado.
         cliente_id: int = kwargs.get('cliente_id', 0) if 'cliente_id' in kwargs else args[0]
         saldo = calcular_saldo_do_cliente(cliente_id)
-        print(f"Saldo R$ {saldo}")
+        print(f"Saldo {formatar_valor_monetario(saldo)}")
         exibir_data_e_hora()
 
     return envelope
 
+
+locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+
+def formatar_valor_monetario(valor:float) -> str:
+    '''
+    Formata um valor para  moeda corrente.
+    '''
+    moeda_formatada = locale.currency(valor, grouping=True)
+    return moeda_formatada
+   
 ##################################################
         # CREDENCIAS - ENTRADA NO SISTEMA #
 ##################################################
@@ -116,9 +125,9 @@ def exibir_extrato(cliente_id: int) -> None:
         valor:float = operacao.valor
         data: datetime = operacao.date
         if valor < 0:
-            print_left(f"Saque {vermelho(f'R${valor}')} Em: {formatar_data_e_hora(data)}\n")
+            print_left(f"Saque {vermelho(f'{formatar_valor_monetario(valor)}')} Em: {formatar_data_e_hora(data)}\n") # pylint: disable=line-too-long
         elif valor > 0:
-            print_left(f"Depósito {verde(f'R${valor}')} Em: {formatar_data_e_hora(data)}\n")
+            print_left(f"Depósito {verde(f'{formatar_valor_monetario(valor)}')} Em: {formatar_data_e_hora(data)}\n") # pylint: disable=line-too-long
     print(f"{LINHA_TRACEJADA}")
 
 
