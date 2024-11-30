@@ -21,9 +21,6 @@ Comando para instalação dos pacotes:
 pip install -r requirements.txt
 ```
 
-#### Download - Visualização sqlite
-[![DB4S 3.12.2](https://img.shields.io/badge/DB4S-blue)](https://www.python.org/downloads/)
-
 ### Comandos para Verificação Estática de Código (pylint e mypy):
 ```
 # Para testar todos:
